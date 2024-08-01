@@ -5,6 +5,7 @@ import camp.model.Subject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import camp.service;
 /**
  * Notification
  * Java, 객체지향이 아직 익숙하지 않은 분들은 위한 소스코드 틀입니다.
@@ -217,10 +218,39 @@ public class CampManagementApplication {
     // 수강생의 과목별 시험 회차 및 점수 등록
     private static void createScore() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호 입력받아 stusentId 에 저장
+        sc.nextLine(); // 개행문자 처리
         System.out.println("시험 점수를 등록합니다...");
         // 기능 구현
         // 추가됨 시작
-        //
+        //1. 점수 등록할 과목 입력 받아 변수에 담기
+        //2. 회차 입력 받아서 Score 객체 생성하기
+        //3. 점수 입력받아서 Score 객체에 담기
+        System.out.println("점수를 등록할 과목을 입력하세요: ");
+        String sub = sc.nextLine();
+        for (int i = 0; i < subjectStore.size(); i++) {
+            if(subjectStore.get(i).getSubjectName().equals(sub)){
+                System.out.println(sub+" 과목을 선택하셨습니다.");
+                System.out.println("점수를 등록할 회차를 입력하세요: ");
+                int num = sc.nextInt();
+                sc.nextLine();
+                String seq = "SC" + num;
+                Score score = new Score(seq);
+                System.out.println("점수를 입력하세요: ");
+                score.setScore(sc.nextInt());
+                System.out.println("성공적으로 저장되었습니다.");
+                System.out.println("점수관리 화면으로 돌아갑니다.");
+                displayScoreView();
+
+            } else{
+                if(i == subjectStore.size()-1){
+                    System.out.println("해당 과목은 존재하지 않습니다.");
+                    System.out.println("점수관리 화면으로 돌아갑니다.");
+                    displayScoreView();
+
+                }
+            }
+        }
+
 
         //추가됨 끝
         Score score = new Score(sequence(INDEX_TYPE_SCORE));
