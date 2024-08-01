@@ -1,13 +1,10 @@
 package camp;
-
 import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 /**
  * Notification
  * Java, 객체지향이 아직 익숙하지 않은 분들은 위한 소스코드 틀입니다.
@@ -48,7 +45,10 @@ public class CampManagementApplication {
 
     // 초기 데이터 생성
     private static void setInitData() {
+        // 학생 번호 모음
         studentStore = new ArrayList<>();
+
+        // 과목 번호 모음
         subjectStore = List.of(
                 new Subject(
                         sequence(INDEX_TYPE_SUBJECT),
@@ -96,10 +96,11 @@ public class CampManagementApplication {
                         SUBJECT_TYPE_CHOICE
                 )
         );
+        // 점수 모음
         scoreStore = new ArrayList<>();
     }
 
-    // index 자동 증가
+    // index 자동 증가 -> 매개변수에 따라 String타입 "ST+학생번호", "SU+과목번호", "SC+회차번호" 반환하고 해당 인덱스 번호 증가
     private static String sequence(String type) {
         switch (type) {
             case INDEX_TYPE_STUDENT -> {
@@ -215,9 +216,18 @@ public class CampManagementApplication {
 
     // 수강생의 과목별 시험 회차 및 점수 등록
     private static void createScore() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        String studentId = getStudentId(); // 관리할 수강생 고유 번호 입력받아 stusentId 에 저장
         System.out.println("시험 점수를 등록합니다...");
         // 기능 구현
+        // 추가됨 시작
+        //
+
+        //추가됨 끝
+        Score score = new Score(sequence(INDEX_TYPE_SCORE));
+
+
+
+
         System.out.println("\n점수 등록 성공!");
     }
 
@@ -225,6 +235,8 @@ public class CampManagementApplication {
     private static void updateRoundScoreBySubject() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
         // 기능 구현 (수정할 과목 및 회차, 점수)
+        System.out.println("수정할 과목을 선택하세요: " );
+
         System.out.println("시험 점수를 수정합니다...");
         // 기능 구현
         System.out.println("\n점수 수정 성공!");
