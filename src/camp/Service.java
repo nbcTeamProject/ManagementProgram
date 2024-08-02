@@ -57,6 +57,14 @@ public class Service {
         }
         return subId;
     }
+    // 매개변수로 받은 점수가  minNum~maxNum사이 인지 판별해 true false 반환하는 메서드
+    public static boolean IsIn(int num, int minNum, int maxNum){
+        boolean answer = true;
+        if(num <  minNum || num > maxNum){
+            answer = false;
+        }
+        return answer;
+    }
 
     //gettet
     public String getStudentId() {
