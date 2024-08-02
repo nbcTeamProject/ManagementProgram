@@ -3,7 +3,6 @@ package camp;
 
 import camp.model.Score;
 import camp.model.Student;
-import camp.model.StudentService;
 import camp.model.Subject;
 
 import java.util.*;
@@ -176,11 +175,6 @@ public class CampManagementApplication {
         String studentName = sc.next();
         // 기능 구현 (필수 과목, 선택 과목)
 
-
-        // 결과값을 저장할 ArrayList
-         ArrayList<String> studentList = new ArrayList<>();
-
-
         //과목 가져오기
         List<String> validSubjects = new ArrayList<>();
         for (Subject subject : subjectStore){
@@ -209,6 +203,7 @@ public class CampManagementApplication {
                     break;
                 }
             }
+
         }
 
         // 선택과목 등록
@@ -239,12 +234,9 @@ public class CampManagementApplication {
         String studentId = sequence(INDEX_TYPE_STUDENT);
         Student student = new Student(studentId, studentName, mandatoryArr, choiceArr); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
-        studentList.add(String.valueOf(student));
+        studentStore.add(student);
 
-
-        System.out.println(Arrays.toString(new ArrayList[]{studentList}));
-
-        //System.out.println("수강생 등록 성공!\n");
+        System.out.println("수강생 등록 성공!\n");
     }
 
     // 수강생 목록 조회
