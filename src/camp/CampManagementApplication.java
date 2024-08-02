@@ -176,52 +176,52 @@ public class CampManagementApplication {
         String studentName = sc.next();
         // 기능 구현 (필수 과목, 선택 과목)
 
-//        StudentService service = new StudentService();
-//    //    String result = String.valueOf(service.getSubject());
-//
-//        //필수과목 등록
-//        String[] mandatoryArr = new String[5];
-//        System.out.println("필수과목을 최소 3가지를 입력해주세요: ");
-//        String mandatory = sc.next();
-//
-//        for (int i = 0; i < mandatoryArr.length; i++){
-//
-//            if(!Objects.equals(mandatory,subjectStore)){
-//                throw new Error("알맞은 과목을 선택하세요.");
-//           }
-//
-//            mandatoryArr[i] = mandatory;
-//
-//            if ( i == 2){
-//                System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
-//                sc.nextLine();
-//                String end = sc.nextLine();
-//                if (Objects.equals(end, "exit")) {
-//                    System.out.println("입력을 종료합니다.");
-//                    break;
-//                }
-//            }
-//        }
-//
-//        // 선택과목 등록
-//        String[] choiceArr = new String[4];
-//        for (int i = 0; i < mandatoryArr.length; i++){
-//            System.out.println("2개 이상의 선택 과목을 입력해주세요: ");
-//            String choice = sc.next();
-//            choiceArr[i] = choice;
-//
-//            if ( i == 1){
-//                System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
-//                sc.nextLine();
-//                String end = sc.nextLine();
-//                if (Objects.equals(end, "exit")) {
-//                    System.out.println("입력을 종료합니다.");
-//                    break;
-//                }
-//            }
-//
-//        }
+        StudentService service = new StudentService();
+    //    String result = String.valueOf(service.getSubject());
 
+        //필수과목 등록
+        String[] mandatoryArr = new String[5];
+        System.out.println("필수과목을 최소 3가지를 입력해주세요: ");
+        String mandatory = sc.next();
+
+        for (int i = 0; i < mandatoryArr.length; i++){
+
+            if(!Objects.equals(mandatory,subjectStore)){
+                throw new Error("알맞은 과목을 선택하세요.");
+           }
+
+            mandatoryArr[i] = mandatory;
+
+            if ( i == 2){
+                System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
+                sc.nextLine();
+                String end = sc.nextLine();
+                if (Objects.equals(end, "exit")) {
+                    System.out.println("입력을 종료합니다.");
+                    break;
+                }
+            }
+        }
+
+        // 선택과목 등록
+        String[] choiceArr = new String[4];
+        for (int i = 0; i < mandatoryArr.length; i++){
+            System.out.println("2개 이상의 선택 과목을 입력해주세요: ");
+            String choice = sc.next();
+            choiceArr[i] = choice;
+
+            if ( i == 1){
+                System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
+                sc.nextLine();
+                String end = sc.nextLine();
+                if (Objects.equals(end, "exit")) {
+                    System.out.println("입력을 종료합니다.");
+                    break;
+                }
+            }
+
+        }
+        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
 
 //
