@@ -381,9 +381,43 @@ public class CampManagementApplication {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
         sc.nextLine();
         // 기능 구현 (조회할 특정 과목)
+        /* 과목을 입력받고, 과목이 있는지 조회 */
+        System.out.println("조회할 과목을 입력해주세요: ");
+        String subjectName = sc.nextLine();
+        Subject subject = Service.findSubject(subjectStore, subjectName);
+        if (subject == null) {
+            System.out.println("입력한 과목이 없습니다. 다시 입력해주세요.");
+            return;
+        }
+        /* 시험이 몇회차인지 조회 */
+        int testNumber;
+        while (true) {
+            System.out.println("조회할 시험이 몇회차인지 입력해주세요: ");
+            testNumber = sc.nextInt();
+            if (Service.IsIn(testNumber,1,10)){
+                break;
+            } else {
+                System.out.println("잘못입력하셨습니다. 1~10 회차 중 하나를 입력해주세요: ");
+            }
+        }
+
+        /* 입력받은 회차에 대한 점수와 등급조회 */
         System.out.println("회차별 등급을 조회합니다...");
         // 기능 구현
+        /* 수강생ID = 사용자입력 수강생 ID 확인 */
+        /* 조회하려는 과목의 ID가 일치하는지 확인*/
+        /* 시험회차가 입력한 시험회차와 일치하는지 확인 */
+        /* 위 조건을 모두 만족하면 수강생,과목,시험회차 정보를 가지고 있는 것*/
+        for (Service service : serviceStore){
+            if (service.getStudentId().equals(studentId)
+                    && service.getSubjectId().equals(subject.getSubjectId())
+                    && service.getTest()==testNumber){
+                System.out.println(service.getTest()+"번째 회차입니다.");
+                System.out.println("점수는 "+service.getTestscore()+"점 입니다.");
+                System.out.println("등급은: "+service.getGrade()+ "입니다.");
+            }
+        }
+
         System.out.println("\n등급 조회 성공!");
     }
-
 }

@@ -14,6 +14,7 @@ public class Service {
     private int testscore;
     private char grade;
 
+
     public Service(Score score, Subject subject, String studentId) {
         this.studentId      = studentId;
         this.subjectId      = subjectId;
@@ -27,6 +28,10 @@ public class Service {
         System.out.println("Service 객체의 subjectId: " + subjectId);
         System.out.println("Service 객체의 studentId: " + studentId);
 
+    }
+    /* 등급 조회 때문에 새로운 getGrade 생성 */
+    public char getGrade(){
+        return grade;
     }
     //Subject 객체를 담은 리스트와 과목 이름으로 Subject 객체 찾는 메서드
     public static Subject findSubject(List<Subject> subjectStore, String subject){
