@@ -27,7 +27,7 @@ public class CampManagementApplication {
 
     // 과목 타입
     private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";
-    private static String SUBJECT_TYPE_CHOICE = "CHOICE";
+    private static String SUBJECT_TYPE_CHOICE = "setTestscore";
 
     // index 관리 필드
     private static int studentIndex;
@@ -225,14 +225,15 @@ public class CampManagementApplication {
         String subjectName;
         String subjectId = "";
         System.out.println("시험 점수를 등록합니다...");
+        Subject subject;
 
 
         // 기능 구현
 
         /* 위에 있는 과목들 가져오기 */
         List<String> validSubjects = new ArrayList<>();
-        for (Subject subject : subjectStore){
-            validSubjects.add(subject.getSubjectName());
+        for (Subject sub : subjectStore){
+            validSubjects.add(sub.getSubjectName());
         }
 
 
@@ -240,10 +241,11 @@ public class CampManagementApplication {
         while (true) {
             System.out.println("시험과목을 입력하세요: ");
             subjectName = sc.nextLine();
+            subject = Service.findSubject(subjectStore,subjectName);
             if (validSubjects.contains(subjectName)){
-                for (Subject subject : subjectStore){
-                    if(subjectName.equals(subject.getSubjectName())){
-                        subjectId = subject.getSubjectId();
+                for (Subject sub : subjectStore){
+                    if(subjectName.equals(sub.getSubjectName())){
+                        subjectId = sub.getSubjectId();
                     }
                 }
                 break;
@@ -293,7 +295,8 @@ public class CampManagementApplication {
         /* scoreStore에 넣기위한 score 객체만들기 */
         Score score = new Score("SC"+test,test,testscore);
         scoreStore.add(score);
-        Service service = new Service(score,subjectId,studentId);
+
+        Service service = new Service(score,subject,studentId);
         serviceStore.add(service);
         System.out.println("\n점수 등록 성공!");
     }
@@ -328,6 +331,7 @@ public class CampManagementApplication {
         // 입력 받은 과목이 있는지 확인
         if(subjects.contains(sub)){
             System.out.println(sub+" 과목을 선택하셨습니다.");
+            Subject subject = Service.findSubject(subjectStore,sub);
 
             // 해당 과목의 수정할 회차 입력받아 해당 학생의 해당 과목의 회차가 등록되었는지 확인하여 있다면 다음, 없다면 되돌아감
             System.out.println("점수를 수정할 회차를 입력하세요: ");
@@ -336,13 +340,13 @@ public class CampManagementApplication {
             if(Service.IsIn(testNum,1,10)){
                 for (int i = 0; i < serviceStore.size(); i++) {
                     Service tempService = serviceStore.get(i);
-                    if(tempService.getStudentId().equals(studentId) && tempService.getSubjectId().equals(subId) && tempService.getTest() == testNum) {
+                    if(tempService.getStudentId().equals(studentId) && subject.getSubjectId().equals(subId) && tempService.getTest() == testNum) {
                         System.out.println("해당 데이터를 조회하였습니다.");
                         System.out.println("점수를 수정해 주세요: ");
                         testScore = sc.nextInt();
                         sc.nextLine();
                         if (Service.IsIn(testScore, 0, 100)) {
-                            tempService.setTestscore(testScore);
+                            tempService.setTestscore(testScore, subject);
                             System.out.println("\n점수 수정 성공!");
                             break;
                         } else {
@@ -375,6 +379,7 @@ public class CampManagementApplication {
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        sc.nextLine();
         // 기능 구현 (조회할 특정 과목)
         System.out.println("회차별 등급을 조회합니다...");
         // 기능 구현
