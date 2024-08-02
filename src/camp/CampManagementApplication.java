@@ -23,6 +23,7 @@ public class CampManagementApplication {
     private static List<Student> studentStore;
     private static List<Subject> subjectStore;
     private static List<Score> scoreStore;
+    private static List <Service> serviceStore;
 
     // 과목 타입
     private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";
@@ -99,6 +100,7 @@ public class CampManagementApplication {
                 )
         );
         scoreStore = new ArrayList<>();
+        serviceStore = new ArrayList<>();
     }
 
     // index 자동 증가
@@ -221,7 +223,11 @@ public class CampManagementApplication {
     // 수강생의 과목별 시험 회차 및 점수 등록
     private static void createScore() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        sc.nextLine();
+        String subjectName;
+        String subjectId = "";
         System.out.println("시험 점수를 등록합니다...");
+
 
         // 기능 구현
 
@@ -230,12 +236,18 @@ public class CampManagementApplication {
         for (Subject subject : subjectStore){
             validSubjects.add(subject.getSubjectName());
         }
-        String subjectName;
+
+
         /* 위에 있는 과목들 중 제대로 시험과목을 봤는지 */
         while (true) {
             System.out.println("시험과목을 입력하세요: ");
-            subjectName = sc.next();
+            subjectName = sc.nextLine();
             if (validSubjects.contains(subjectName)){
+                for (Subject subject : subjectStore){
+                    if(subjectName.equals(subject.getSubjectName())){
+                        subjectId = subject.getSubjectId();
+                    }
+                }
                 break;
             }
             else {
@@ -270,30 +282,80 @@ public class CampManagementApplication {
             }
         }
         /* 등록하려는 과목의 회차점수가 이미 등록되어있는지 확인하기, 중복하면 등록불가*/
-        for (Score score: scoreStore) {
+        for (Service service: serviceStore) {
             /* score 객체 학생 ID,과목명,회차가 등록하려는 이미 저장된 것들과 동일한지 확인*/
             /* if 내 조건을 만족하면 등록불가 */
-            if (score.getStudentId().equals(studentId)&&score.getSubjectName().equals(subjectName)&&score.getTest()==test){
+            if (service.getStudentId().equals(studentId)&&service.getSubjectId().equals(subjectName)&&service.getTest()==test){
                 System.out.println("등록하려는 과목의 회차 점수가 이미 등록되어 있습니다. 점수가 중복되어 등록될 수 없습니다. ");
                 return;
             }
         }
         /* scoreStore에 넣기위한 score 객체만들기 */
-        Score score = new Score(sequence(INDEX_TYPE_SCORE),studentId,subjectName,test,testscore);
+        Score score = new Score("SC"+test,test,testscore);
         scoreStore.add(score);
+        Service service = new Service(score,subjectId,studentId);
+        serviceStore.add(service);
         System.out.println("\n점수 등록 성공!");
     }
 
+    /*---------------------------------------------------------------------------------------*/
     /*---------------------------------------------------------------------------------------*/
 
     // 수강생의 과목별 회차 점수 수정
     private static void updateRoundScoreBySubject() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        int testScore;
+        sc.nextLine();
         // 기능 구현 (수정할 과목 및 회차, 점수)
         System.out.println("시험 점수를 수정합니다...");
         // 기능 구현
-        System.out.println("\n점수 수정 성공!");
+        //1. 수정할 과목 선택 -> 해당 과목이 과목 리스트에 있는지 확인해서 있으면 다음, 없으면 updateRoundScoreBySubject 메서드 실행
+        //2. 수정할 과목의 회차 선택 -> 해당 학생의 해당 과목 회차가 등록이 되어 있으면 다음, 없으면 updateRoundScoreBySubject 메서드 실행
+        //3. 점수 입력받기  -> 점수가 0~100 사이 이면 다음, 아니면 updateRoundScoreBySubject 메서드 실행
+        //4. Service 객체 수정 
+        System.out.println("점수를 수정할 과목을 입력해주세요: ");
+        String sub = sc.nextLine();
+        ArrayList<String>subjects = new ArrayList<>();
+        ArrayList<String>subjectIds = new ArrayList<>();
+        String subId = Service.findSubjectId(sub);
+        List<Integer>testNums =  new ArrayList<>();
+        int testNum;
+        for (Subject subject : subjectStore){
+            subjects.add(subject.getSubjectName());
+        }
+
+        // 입력 받은 과목이 있는지 확인
+        if(subjects.contains(sub)){
+            System.out.println(sub+" 과목을 선택하셨습니다.");
+
+            // 해당 과목의 수정할 회차 입력받아 해당 학생의 해당 과목의 회차가 등록되었는지 확인하여 있다면 다음, 없다면 되돌아감
+            System.out.println("점수를 수정할 회차를 입력하세요: ");
+            testNum = sc.nextInt();
+
+            for (int i = 0; i < serviceStore.size(); i++) {
+                Service tempService = serviceStore.get(i);
+                if(tempService.getStudentId().equals(studentId) && tempService.getSubjectId().equals(subId) && tempService.getTest() == testNum){
+                    System.out.println("해당 데이터를 조회하였습니다.");
+                    System.out.println("점수를 수정해 주세요.");
+                    testScore = sc.nextInt();
+                    tempService.setTestscore(testScore);
+                    System.out.println("\n점수 수정 성공!");
+                    break;
+                }else {
+                    if(i == serviceStore.size()-1){
+                        System.out.println("해당 데이터를 확인할 수 없습니다");
+                        System.out.println("점수 수정 화면으로 돌아갑니다.");
+                        updateRoundScoreBySubject();
+                    }
+                }
+            }
+        } else {
+            System.out.println("점수 수정 화면으로 돌아갑니다.");
+            updateRoundScoreBySubject();
+        }
     }
+    /*---------------------------------------------------------------------------------------*/
+
 
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
