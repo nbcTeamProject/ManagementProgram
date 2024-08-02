@@ -176,21 +176,29 @@ public class CampManagementApplication {
         String studentName = sc.next();
         // 기능 구현 (필수 과목, 선택 과목)
 
-        StudentService service = new StudentService();
-    //    String result = String.valueOf(service.getSubject());
+
+        // 결과값을 저장할 ArrayList
+         ArrayList<String> studentList = new ArrayList<>();
+
+
+        //과목 가져오기
+        List<String> validSubjects = new ArrayList<>();
+        for (Subject subject : subjectStore){
+            validSubjects.add(subject.getSubjectName());
+        }
 
         //필수과목 등록
         String[] mandatoryArr = new String[5];
         System.out.println("필수과목을 최소 3가지를 입력해주세요: ");
-        String mandatory = sc.next();
 
         for (int i = 0; i < mandatoryArr.length; i++){
+            String essential = sc.next();
 
-            if(!Objects.equals(mandatory,subjectStore)){
-                throw new Error("알맞은 과목을 선택하세요.");
-           }
-
-            mandatoryArr[i] = mandatory;
+            if(validSubjects.contains(essential)){
+           } else {
+                System.out.println("입력값이 필수과목과 선택과목에 없습니다. 다시 입력해주세요. ");
+            }
+            mandatoryArr[i] = essential;
 
             if ( i == 2){
                 System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
@@ -205,9 +213,16 @@ public class CampManagementApplication {
 
         // 선택과목 등록
         String[] choiceArr = new String[4];
-        for (int i = 0; i < mandatoryArr.length; i++){
-            System.out.println("2개 이상의 선택 과목을 입력해주세요: ");
+        System.out.println("2개 이상의 선택 과목을 입력해주세요: ");
+
+        for (int i = 0; i < choiceArr.length; i++){
             String choice = sc.next();
+
+            if(validSubjects.contains(choice)){
+
+            } else {
+                System.out.println("입력값이 필수과목과 선택과목에 없습니다. 다시 입력해주세요. ");
+            }
             choiceArr[i] = choice;
 
             if ( i == 1){
@@ -221,17 +236,15 @@ public class CampManagementApplication {
             }
 
         }
-        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
+        String studentId = sequence(INDEX_TYPE_STUDENT);
+        Student student = new Student(studentId, studentName, mandatoryArr, choiceArr); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
-
-//
-//        System.out.println(student.getStudentId());
-//        System.out.println(student.getStudentName());
-//        System.out.println(Arrays.toString(mandatoryArr));
-//        System.out.println(Arrays.toString(choiceArr));
+        studentList.add(String.valueOf(student));
 
 
-       // System.out.println("수강생 등록 성공!\n");
+        System.out.println(Arrays.toString(new ArrayList[]{studentList}));
+
+        //System.out.println("수강생 등록 성공!\n");
     }
 
     // 수강생 목록 조회
