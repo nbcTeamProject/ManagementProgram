@@ -289,72 +289,54 @@ public class CampManagementApplication {
 
     // 수강생의 과목별 회차 점수 수정
     private static void updateRoundScoreBySubject() {
-        int testScore;
-        int testNum;
-        String sub;
-        String subId;
-        ArrayList<String>subjects = new ArrayList<>();
-        for (Subject subject : subjectStore){
-            subjects.add(subject.getSubjectName());
-        }
+        Score score;
+        Subject subject;
+        Student student;
+        Service service;
         // 기능 구현 (수정할 과목 및 회차, 점수)
         System.out.println("==================================");
         System.out.println("시험 점수를 수정합니다...");
-        Student student = StudentManager.getStudent(); // 관리할 수강생 고유 번호
+        student = StudentManager.getStudent(); // 관리할 수강생 고유 번호
         sc.nextLine();
         // 기능 구현
         //1. 수정할 과목 선택 -> 해당 과목이 과목 리스트에 있는지 확인해서 있으면 다음, 없으면 updateRoundScoreBySubject 메서드 실행
         //2. 수정할 과목의 회차 선택 -> 해당 학생의 해당 과목 회차가 등록이 되어 있으면 다음, 없으면 updateRoundScoreBySubject 메서드 실행
         //3. 점수 입력받기  -> 점수가 0~100 사이 이면 다음, 아니면 updateRoundScoreBySubject 메서드 실행
         //4. Service 객체 수정
-        System.out.println("점수를 수정할 과목을 입력해주세요: ");
-        sub = sc.nextLine();
-        subId = Service.findSubjectId(sub);
-
-        // 입력 받은 과목이 있는지 확인
-        if(subjects.contains(sub)){
-            System.out.println(sub+" 과목을 선택하셨습니다.");
-            Subject subject = Service.findSubject(subjectStore,sub);
-
-            // 해당 과목의 수정할 회차 입력받아 해당 학생의 해당 과목의 회차가 등록되었는지 확인하여 있다면 다음, 없다면 되돌아감
-            System.out.println("점수를 수정할 회차를 입력하세요: ");
-            testNum = sc.nextInt();
-            sc.nextLine();
-            if(Service.IsIn(testNum,1,10)){
-                for (int i = 0; i < serviceStore.size(); i++) {
-                    Service tempService = serviceStore.get(i);
-                    if(tempService.getStudentId().equals(student.getStudentId()) && subject.getSubjectId().equals(subId) && tempService.getTest() == testNum) {
-                        System.out.println("해당 데이터를 조회하였습니다.");
+        if(student != null){
+            subject = SubjectManager.getSubject();
+            // 입력 받은 과목이 있는지 확인
+            if(subject != null){ // subject 객체 찾았을 때
+                System.out.println(subject.getSubjectName()+" 과목을 선택하셨습니다.");
+                // 해당 과목의 수정할 회차 입력받아 해당 학생의 해당 과목의 회차가 등록되었는지 확인하여 있다면 다음, 없다면 되돌아감
+                score = ScoreManager.getScore();
+                if(score != null){ // 등록된 score 객체 찾았을 때
+                    service = Service.findService(student,subject,score.getTest());
+                    if(service != null){// 페어링 된 Service 객체 찾았을 때
                         System.out.println("studentId: "+student.getStudentId());
                         System.out.println("점수를 수정해 주세요: ");
-                        testScore = sc.nextInt();
+                        int testSc = sc.nextInt();
                         sc.nextLine();
-                        if (Service.IsIn(testScore, 0, 100)) {
-                            tempService.setTestscore(testScore, subject);
-                            System.out.println("\n점수 수정 성공!");
-                            break;
-                        } else {
+                        if(ScoreManager.IsTestScoreIn(testSc)){ // 0~100점 사이 입력받았을 때
+                            service.setTestscore(testSc,subject);
+                        } else { // 0~100 점 이외 입력 받았을 때.
                             System.out.println("잘못 입력하였습니다. 점수 수정 화면으로 돌아갑니다");
                             updateRoundScoreBySubject();
                         }
-                    }else {
-                        if(i == serviceStore.size()-1){
-                            System.out.println("해당 데이터를 확인할 수 없습니다");
-                            System.out.println("점수 수정 화면으로 돌아갑니다.");
-                            updateRoundScoreBySubject();
-                        }
                     }
+                    else { // Service 객체 찾지 못했을 때
+                        System.out.println("해당 데이터를 확인할 수 없습니다");
+                        System.out.println("점수 수정 화면으로 돌아갑니다.");
+                        updateRoundScoreBySubject();
+                    }
+                }else{ //등록된 score 객체 못찾았을 때
+                    System.out.println("점수 수정 화면으로 돌아갑니다.");
+                    updateRoundScoreBySubject();
                 }
-            }else{
-                System.out.println("잘못된 회차입니다. 점수 수정 화면으로 돌아갑니다.");
+            } else {// subject 객체 못찾았을 때
+                System.out.println("점수 수정 화면으로 돌아갑니다.");
                 updateRoundScoreBySubject();
             }
-
-
-        } else {
-            System.out.println("해당 과목은 존재하지 않습니다.");
-            System.out.println("점수 수정 화면으로 돌아갑니다.");
-            updateRoundScoreBySubject();
         }
     }
     /*---------------------------------------------------------------------------------------*/

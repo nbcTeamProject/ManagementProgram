@@ -19,6 +19,7 @@ public class ScoreManager extends Score{
     }
 
     //시험 회차 입력 받아서 Score(점수 등록이 되어있는 객체) 객체 반환하는 메서드
+    // 이 메서드 사용 후 sc.nextLine() 사용 권장
     public static Score getScore() {
         System.out.print("\n시험 회차를 입력해주세요:");
         int tempTest = sc.nextInt();
@@ -48,4 +49,7 @@ public class ScoreManager extends Score{
         }
         return false;
     }
+
+    public static void setTestScore(int sc) {
+        testScore  = sc;}
 }
