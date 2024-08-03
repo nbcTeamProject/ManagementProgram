@@ -26,7 +26,7 @@ public class StudentManager extends Student{
         for (int i = 0; i < studentStore.size(); i++) {
             Student tempStudent = studentStore.get(i);
             if(tempStudent.getStudentId().equals("ST"+tempStudentNum)){
-                System.out.println("해당 Student 객체를 찾았습니다.");
+                System.out.println(tempStudent.getStudentName() + " 학생의 데이터를 찾았습니다.");
                 return tempStudent;
             }
         }
