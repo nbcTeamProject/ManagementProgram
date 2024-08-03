@@ -14,6 +14,13 @@ public class Service {
     private int test;
     private int testScore;
     private char grade;
+    private static List<Student>studentStore    = CampManagementApplication.getStudentStore();
+    private static List<Score>scoreStore        = CampManagementApplication.getScoreStore();
+    private static List<Subject> subjectStore   = CampManagementApplication.getSubjectStore();
+    private static List <Service> serviceStore  = CampManagementApplication.getServiceStore();
+
+
+
 
     public Service(Score score, Subject subject, String studentId) {
         this.studentId      = studentId;
@@ -121,12 +128,12 @@ public class Service {
         return grade;
     }
     // service 리스트와, 시험 회차, Student 객체, Subject 객체 입력 받아서 service 객체 반환하는 메서드
-    public static Service findService(List<Service>services, int test, Student student, Subject subject ){
-        for (int i = 0; i < services.size(); i++) {
-            Service service = services.get(i);
-            if (service.getTest() == test && service.getSubjectId().equals(subject.getSubjectId())&&service.getStudentId().equals(student.getStudentId())) {
+    public static Service findService(Student student, Subject subject, int test ){
+        for (int i = 0; i < serviceStore.size(); i++) {
+            Service tempService = serviceStore.get(i);
+            if (tempService.getTest() == test && tempService.getSubjectId().equals(subject.getSubjectId())&&tempService.getStudentId().equals(student.getStudentId())) {
                 System.out.println("해당 Service 객체를 찾았습니다.");
-                return service;
+                return tempService;
             }
         }
         System.out.println("해당 Service 객체를 찾지 못했습니다.");

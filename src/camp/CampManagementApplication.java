@@ -4,10 +4,14 @@ package camp;
 import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
+import camp.model.SubjectManager;
+import camp.model.StudentManager;
+import camp.model.ScoreManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 
 /**
  * Notification
@@ -214,92 +218,68 @@ public class CampManagementApplication {
         }
     }
 
-    private static String getStudentId() {
-        String answer;
-        System.out.print("\n관리할 수강생의 번호를 입력하시오...");
-        return "ST"+sc.next();
-    }
+
     /*---------------------------------------------------------------------------------------*/
 
     // 수강생의 과목별 시험 회차 및 점수 등록
     private static void createScore() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        sc.nextLine();
-        String subjectName;
-        String subjectId = "";
-        System.out.println("시험 점수를 등록합니다...");
         Subject subject;
-
-
-        // 기능 구현
-
-        /* 위에 있는 과목들 가져오기 */
-        List<String> validSubjects = new ArrayList<>();
-        for (Subject sub : subjectStore){
-            validSubjects.add(sub.getSubjectName());
-        }
-
-
+        Student student;
+        Score score;
+        Service service;
+        int testscore;
+        int test;
         /* 위에 있는 과목들 중 제대로 시험과목을 봤는지 */
+        // 기능 구현
         while (true) {
-            System.out.println("시험과목을 입력하세요: ");
-            subjectName = sc.nextLine();
-            subject = Service.findSubject(subjectStore,subjectName);
-            if (validSubjects.contains(subjectName)){
-                for (Subject sub : subjectStore){
-                    if(subjectName.equals(sub.getSubjectName())){
-                        subjectId = sub.getSubjectId();
-                    }
+            System.out.println("시험 점수를 등록합니다...");
+            student = StudentManager.getStudent(); // 관리할 수강생 고유 번호 입력받기
+            sc.nextLine();
+            if (student != null) {
+                subject = SubjectManager.getSubject(); // 과목 입력받아서 Subject 객체 담기
+                if (subject != null){
+                    break;
+                } else { // subject Null 일 때
+                    System.out.println("점수 등록 화면으로 돌아갑니다.");
                 }
-                break;
-            }
-            else {
-                System.out.println("시험과목이 항목에 없습니다. 다시 입력해주세요. ");
+            } else{ // student Null 일때 되돌아감
+                System.out.println("점수 등록 화면으로 돌아갑니다.");
             }
         }
         /* 시험 회차 입력 */
-        int test;
         while (true){
-            System.out.print("시험 1~10회차 중 본인 시험회차를 입력해주세요: ");
+            System.out.println("등록할 시험 회차를 입력하세요: ");
             test = sc.nextInt();
-
-            /* 올바른 시험 회차인지 확인하기 */
-
-            if (Service.IsIn(test,1,10)){
+            sc.nextLine();
+            if (ScoreManager.IsTestIn(test)){ // 시험 회차 입력받고 1~10회차 사이인지 판단
+                System.out.println(test + " 회차 시험을 입력하셨습니다.");
                 break;
-            }
-            else{
-                System.out.print("잘못된 회차입니다. 다시 입력해주새요.\n ");
+            } else {
+                System.out.println("잘못된 회차를 입력하셨습니다. 다시 입력해주세요: ");
             }
         }
         /* 시험 점수 입력 */
-        int testscore;
         while (true){
-            System.out.print("시험 점수를 입력해주세요: ");
+            System.out.println("시험 점수를 입력하세요: ");
             testscore = sc.nextInt();
-            /* 올바른 점수 입력했는지 확인 */
-
-            if (Service.IsIn(testscore,0,100)){
+            sc.nextLine();
+            if (ScoreManager.IsTestScoreIn(testscore)){ //시험 점수 입력받고 0~100 점 사이인지 판단
                 break;
             }
             else {
-                System.out.print("잘못 입력하였습니다. 0~100 사이의 점수를 다시 입력해주세요.\n ");
+                System.out.println("잘못된 시험 점수를 입력하셨습니다. 다시 입력해주세요: ");
             }
         }
-        /* 등록하려는 과목의 회차점수가 이미 등록되어있는지 확인하기, 중복하면 등록불가*/
-        for (Service service: serviceStore) {
-            /* score 객체 학생 ID,과목명,회차가 등록하려는 이미 저장된 것들과 동일한지 확인*/
-            /* if 내 조건을 만족하면 등록불가 */
-            if (service.getStudentId().equals(studentId)&&service.getSubjectId().equals(subjectName)&&service.getTest()==test){
-                System.out.println("등록하려는 과목의 회차 점수가 이미 등록되어 있습니다. 점수가 중복되어 등록될 수 없습니다. ");
-                return;
-            }
+        service = Service.findService(student,subject,test);
+        if(service != null){// service 객체가 등록 되어있지 않다면 새롭게 등록 가능
+            System.out.println("등록하려는 과목의 회차 점수가 이미 등록되어 있습니다. 점수가 중복되어 등록될 수 없습니다. ");
+            return;
         }
         /* scoreStore에 넣기위한 score 객체만들기 */
-        Score score = new Score("SC"+test,test,testscore);
+        score = new Score("SC"+test,test,testscore);
         scoreStore.add(score);
 
-        Service service = new Service(score,subject,studentId);
+        service = new Service(score,subject,student.getStudentId());
         serviceStore.add(service);
         System.out.println("\n점수 등록 성공!");
     }
@@ -320,7 +300,7 @@ public class CampManagementApplication {
         // 기능 구현 (수정할 과목 및 회차, 점수)
         System.out.println("==================================");
         System.out.println("시험 점수를 수정합니다...");
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        Student student = StudentManager.getStudent(); // 관리할 수강생 고유 번호
         sc.nextLine();
         // 기능 구현
         //1. 수정할 과목 선택 -> 해당 과목이 과목 리스트에 있는지 확인해서 있으면 다음, 없으면 updateRoundScoreBySubject 메서드 실행
@@ -343,9 +323,9 @@ public class CampManagementApplication {
             if(Service.IsIn(testNum,1,10)){
                 for (int i = 0; i < serviceStore.size(); i++) {
                     Service tempService = serviceStore.get(i);
-                    if(tempService.getStudentId().equals(studentId) && subject.getSubjectId().equals(subId) && tempService.getTest() == testNum) {
+                    if(tempService.getStudentId().equals(student.getStudentId()) && subject.getSubjectId().equals(subId) && tempService.getTest() == testNum) {
                         System.out.println("해당 데이터를 조회하였습니다.");
-                        System.out.println("studentId: "+studentId);
+                        System.out.println("studentId: "+student.getStudentId());
                         System.out.println("점수를 수정해 주세요: ");
                         testScore = sc.nextInt();
                         sc.nextLine();
@@ -384,14 +364,11 @@ public class CampManagementApplication {
     private static void inquireRoundGradeBySubject() {
         String sub;
         Service service;
-        Student student;
         Subject subject;
         int testNum;
 
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호 입력 받기
+        Student student = StudentManager.getStudent(); // 관리할 수강생 고유 번호 입력 받기
         sc.nextLine();
-        System.out.println("studentId: "+studentId);
-        student = Service.findStudent(studentStore,studentId);
         System.out.println("조회할 과목을 입력해주세요: "); // 조회할 과목 입력받기
         sub = sc.nextLine();
         subject = Service.findSubject(subjectStore,sub);
@@ -404,7 +381,7 @@ public class CampManagementApplication {
             testNum = sc.nextInt();
             sc.nextLine();
             if(Service.IsIn(testNum,1,10)){
-                service = Service.findService(serviceStore,testNum,student,subject);
+                service = Service.findService(student,subject,testNum);
                 System.out.println("service 객체 찾음");
                 System.out.println(student.getStudentName() + " 학생의 " + subject.getSubjectName() + " 과목 성적: "+service.getTestscore() + "점 입니다.");
                 System.out.println(student.getStudentName() + " 학생의 " + subject.getSubjectName() + " 과목 등급은 "+service.getGrade() + " 입니다.");
@@ -418,6 +395,19 @@ public class CampManagementApplication {
             System.out.println("점수 조회 화면으로 돌아갑니다.");
             inquireRoundGradeBySubject();
         }
+    }
+    //getter
+    public static List<Student> getStudentStore(){
+        return studentStore;
+    }
+    public static List<Subject> getSubjectStore(){
+        return subjectStore;
+    }
+    public static List<Score> getScoreStore(){
+        return scoreStore;
+    }
+    public static List<Service> getServiceStore(){
+        return serviceStore;
     }
 
 }
