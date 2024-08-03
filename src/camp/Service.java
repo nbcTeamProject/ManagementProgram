@@ -8,21 +8,22 @@ import java.util.List;
 public class Service {
 
     private String studentId;
+    private String studentName;
     private String subjectId;
     private String scoreId;
     private int test;
-    private int testscore;
+    private int testScore;
     private char grade;
 
     public Service(Score score, Subject subject, String studentId) {
         this.studentId      = studentId;
-        this.subjectId      = subjectId;
+        this.subjectId      = subject.getSubjectId();
         this.scoreId        = score.getScoreId();
         this.test           = score.getTest();
-        this.testscore      = score.getTestscore();
-        this.grade          = makeGrade(this.testscore,subject);
+        this.testScore      = score.getTestscore();
+        this.grade          = makeGrade(this.testScore,subject);
         System.out.println("Service 객체가 성공적으로 만들어졌습니다.");
-        System.out.println("Service 객체의 testscore: " + testscore);
+        System.out.println("Service 객체의 testScore: " + testScore);
         System.out.println("Service 객체의 grade: "+ grade);
         System.out.println("Service 객체의 subjectId: " + subjectId);
         System.out.println("Service 객체의 studentId: " + studentId);
@@ -30,17 +31,16 @@ public class Service {
     }
     //Subject 객체를 담은 리스트와 과목 이름으로 Subject 객체 찾는 메서드
     public static Subject findSubject(List<Subject> subjectStore, String subject){
-        Subject answer = subjectStore.get(0);
+        Subject answer;
         for (int i = 0; i < subjectStore.size(); i++) {
             Subject sub = subjectStore.get(i);
             if (sub.getSubjectName().equals(subject)) {
-                answer = sub;
-                break;
-            } else if (i == subjectStore.size()-1) {
-                System.out.println("해당 Subject 객체를 찾지 못했습니다.");
+                System.out.println("해당 Subject 객체를 찾았습니다.");
+                return sub;
             }
         }
-        return answer;
+        System.out.println("해당 Subject 객체를 찾지 못했습니다.");
+        return null;
     }
 
     // 과목 이름으로 과목 Id 찾는 메서드
@@ -120,6 +120,30 @@ public class Service {
         }
         return grade;
     }
+    // service 리스트와, 시험 회차, Student 객체, Subject 객체 입력 받아서 service 객체 반환하는 메서드
+    public static Service findService(List<Service>services, int test, Student student, Subject subject ){
+        for (int i = 0; i < services.size(); i++) {
+            Service service = services.get(i);
+            if (service.getTest() == test && service.getSubjectId().equals(subject.getSubjectId())&&service.getStudentId().equals(student.getStudentId())) {
+                System.out.println("해당 Service 객체를 찾았습니다.");
+                return service;
+            }
+        }
+        System.out.println("해당 Service 객체를 찾지 못했습니다.");
+        return null;
+    }
+    // student 리스트와 studentId 받아서 Student 객체 반환하는 메서드
+    public static Student findStudent(List<Student>students, String studentId ){
+        for (int i = 0; i < students.size(); i++) {
+            Student student = students.get(i);
+            if (student.getStudentId().equals(studentId)) {
+                System.out.println("해당 Student 객체를 찾았습니다.");
+                return student;
+            }
+        }
+        System.out.println("해당 Student 객체를 찾지 못했습니다");
+        return null;
+    }
 
     //gettet
     public String getStudentId() {
@@ -130,12 +154,14 @@ public class Service {
     }
     public String getScoreId() {return scoreId;}
     public int getTest() { return test;}
-    public int getTestscore() { return testscore; }
+    public int getTestscore() { return testScore; }
+    public char getGrade() {return grade;}
+
 
     //setter
     public void setTestscore(int score,Subject subject){
-        this.testscore = score;
-        this.grade = makeGrade(this.testscore,subject);
+        this.testScore = score;
+        this.grade = makeGrade(this.testScore,subject);
         System.out.println("수정된 Service 객체의 grade: "+ grade);
     }
 

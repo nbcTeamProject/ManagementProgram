@@ -25,6 +25,7 @@ public class CampManagementApplication {
     private static List<Score> scoreStore;
     private static List <Service> serviceStore;
 
+
     // 과목 타입
     private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";
     private static String SUBJECT_TYPE_CHOICE = "setTestscore";
@@ -177,6 +178,7 @@ public class CampManagementApplication {
 
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
+        studentStore.add(student);
         System.out.println("수강생 등록 성공!\n");
     }
 
@@ -213,8 +215,9 @@ public class CampManagementApplication {
     }
 
     private static String getStudentId() {
+        String answer;
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
-        return sc.next();
+        return "ST"+sc.next();
     }
     /*---------------------------------------------------------------------------------------*/
 
@@ -342,6 +345,7 @@ public class CampManagementApplication {
                     Service tempService = serviceStore.get(i);
                     if(tempService.getStudentId().equals(studentId) && subject.getSubjectId().equals(subId) && tempService.getTest() == testNum) {
                         System.out.println("해당 데이터를 조회하였습니다.");
+                        System.out.println("studentId: "+studentId);
                         System.out.println("점수를 수정해 주세요: ");
                         testScore = sc.nextInt();
                         sc.nextLine();
@@ -366,7 +370,7 @@ public class CampManagementApplication {
                 updateRoundScoreBySubject();
             }
 
-            
+
         } else {
             System.out.println("해당 과목은 존재하지 않습니다.");
             System.out.println("점수 수정 화면으로 돌아갑니다.");
@@ -378,12 +382,42 @@ public class CampManagementApplication {
 
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        String sub;
+        Service service;
+        Student student;
+        Subject subject;
+        int testNum;
+
+        String studentId = getStudentId(); // 관리할 수강생 고유 번호 입력 받기
         sc.nextLine();
-        // 기능 구현 (조회할 특정 과목)
-        System.out.println("회차별 등급을 조회합니다...");
-        // 기능 구현
-        System.out.println("\n등급 조회 성공!");
+        System.out.println("studentId: "+studentId);
+        student = Service.findStudent(studentStore,studentId);
+        System.out.println("조회할 과목을 입력해주세요: "); // 조회할 과목 입력받기
+        sub = sc.nextLine();
+        subject = Service.findSubject(subjectStore,sub);
+        if(subject.getSubjectName().equals(sub)){
+            // 기능 구현 (조회할 특정 과목)
+            System.out.println(subject.getSubjectName()+" 과목을 선택하셨습니다.");
+            System.out.println("회차별 등급을 조회합니다...");
+            // 기능 구현
+            System.out.println("몇 회차 성적을 조회하시겠습니까?: ");
+            testNum = sc.nextInt();
+            sc.nextLine();
+            if(Service.IsIn(testNum,1,10)){
+                service = Service.findService(serviceStore,testNum,student,subject);
+                System.out.println("service 객체 찾음");
+                System.out.println(student.getStudentName() + " 학생의 " + subject.getSubjectName() + " 과목 성적: "+service.getTestscore() + "점 입니다.");
+                System.out.println(student.getStudentName() + " 학생의 " + subject.getSubjectName() + " 과목 등급은 "+service.getGrade() + " 입니다.");
+                System.out.println("\n등급 조회 성공!");
+            } else {
+                System.out.println("잘못 입력하였습니다. 점수 조회 화면으로 돌아갑니다");
+                inquireRoundGradeBySubject();
+            }
+        }else {
+            System.out.println("해당 과목은 존재하지 않습니다.");
+            System.out.println("점수 조회 화면으로 돌아갑니다.");
+            inquireRoundGradeBySubject();
+        }
     }
 
 }
