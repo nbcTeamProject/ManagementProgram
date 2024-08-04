@@ -18,7 +18,6 @@ public class StudentManager extends Student{
     }
 
     // 사용자에게 수강생 번호 입력받아 Student 객체 찾는 메서드
-    // 해당 메서드 사용시 sc.nextLine() 메서드 함께 사용권장
     public static Student getStudent() {
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
         String tempStudentNum = sc.next();
