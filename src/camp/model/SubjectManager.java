@@ -33,4 +33,20 @@ public class SubjectManager extends Subject{
         System.out.println("해당 Subject 객체를 찾지못했습니다.");
         return null;
     }
+    /*==================================================== 추가 */
+    /* Subject Id 를 기반으로 평균 점수를 계산하는 메서드 */
+    public static double calculateAverageScore(String subjectId) {
+        List<Score> scores = CampManagementApplication.getScoreStore();
+        int totalScore = 0;
+        int count = 0;
+
+        for (Score score : scores) {
+            if (score.getTest() == Integer.parseInt(subjectId.replace("SU", ""))) {
+                totalScore += score.getTestscore();
+                count++;
+            }
+        }
+
+        return count > 0 ? (double) totalScore / count : 0;
+    }
 }

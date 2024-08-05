@@ -5,6 +5,7 @@ import camp.model.Subject;
 import camp.model.SubjectManager;
 import camp.model.StudentManager;
 import camp.model.ScoreManager;
+
 import java.util.List;
 import java.util.Scanner;
 import camp.CampManagementApplication;
@@ -332,34 +333,16 @@ public class Service {
     /*---------------------------------------------------------------------------------------*/
     /* 추가 기능 수강생의 과목별 평균 등급을 조회 */
     static void inquireAverageGradeBySubject(){
-        System.out.println("수강생의 과목별 평균 등급을 조회합니다.");
+        /* 과목리스트 가져오기 */
+        List<Subject> subjects = CampManagementApplication.getSubjectStore();
 
-        /* 수강생 선택 */
-        Student student = StudentManager.getStudent();
-        if (student == null){
-            System.out.println("수강생이 없습니다. 메인 화면으로 이동합니다.");
-            return;
-        }
-        System.out.println("수강생: "+student.getStudentName());
-        /* 과목명, 평균등급 출력 */
-        for (Subject subject : subjectStore){
-            int sum=0;
-            int count=0;
+        /* SubjectManger에서 평균점수와 등급을 계산 */
+        for (Subject subject : subjects){
+            double averageScore = SubjectManager.calculateAverageScore(subject.getSubjectId());
+            char averageGrade = makeGrade((int) averageScore, subject);
 
-            for (Service service :serviceStore){
-                if (service.getStudentId().equals(student.getStudentId()) && service.getSubjectId().equals(subject.getSubjectId())){
-                    sum+=service.getTestscore();
-                    count++;
-                }
-            }
-            if (count >0){
-                int averageScore = sum/count;
-                char averageGrade = makeGrade(averageScore, subject);
-                System.out.println("과목명: "+subject.getSubjectName());
-                System.out.println("평균등급: "+averageGrade);
-            } else {
-                System.out.println("과목: "+subject.getSubjectName()+"에 대한 정보가 없습니다.");
-            }
+            System.out.println("과목: "+subject.getSubjectName());
+            System.out.println("평균등급: "+averageGrade);
         }
     }
     /* 추가 기능 끝 */
