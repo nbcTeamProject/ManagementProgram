@@ -1,13 +1,18 @@
 
+
 package camp;
 
 import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
+import camp.model.SubjectManager;
+import camp.model.StudentManager;
+import camp.model.ScoreManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 
 /**
  * Notification
@@ -23,10 +28,12 @@ public class CampManagementApplication {
     private static List<Student> studentStore;
     private static List<Subject> subjectStore;
     private static List<Score> scoreStore;
+    private static List <Service> serviceStore;
+
 
     // 과목 타입
     private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";
-    private static String SUBJECT_TYPE_CHOICE = "CHOICE";
+    private static String SUBJECT_TYPE_CHOICE = "setTestscore";
 
     // index 관리 필드
     private static int studentIndex;
@@ -99,6 +106,7 @@ public class CampManagementApplication {
                 )
         );
         scoreStore = new ArrayList<>();
+        serviceStore = new ArrayList<>();
     }
 
     // index 자동 증가
@@ -132,7 +140,7 @@ public class CampManagementApplication {
 
             switch (input) {
                 case 1 -> displayStudentView(); // 수강생 관리
-                case 2 -> displayScoreView(); // 점수 관리
+                case 2 -> Service.displayScoreView(); // 점수 관리
                 case 3 -> flag = false; // 프로그램 종료
                 default -> {
                     System.out.println("잘못된 입력입니다.\n되돌아갑니다!");
@@ -175,6 +183,7 @@ public class CampManagementApplication {
 
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
+        studentStore.add(student);
         System.out.println("수강생 등록 성공!\n");
     }
 
@@ -185,123 +194,18 @@ public class CampManagementApplication {
         System.out.println("\n수강생 목록 조회 성공!");
     }
 
-    private static void displayScoreView() {
-        boolean flag = true;
-        while (flag) {
-            System.out.println("==================================");
-            System.out.println("점수 관리 실행 중...");
-            System.out.println("1. 수강생의 과목별 시험 회차 및 점수 등록");
-            System.out.println("2. 수강생의 과목별 회차 점수 수정");
-            System.out.println("3. 수강생의 특정 과목 회차별 등급 조회");
-            System.out.println("4. 메인 화면 이동");
-            System.out.print("관리 항목을 선택하세요...");
-            int input = sc.nextInt();
 
-            switch (input) {
-                case 1 -> createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
-                case 2 -> updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
-                case 3 -> inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
-                case 4 -> flag = false; // 메인 화면 이동
-                default -> {
-                    System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
-                    flag = false;
-                }
-            }
-        }
+    //getter
+    public static List<Student> getStudentStore(){
+        return studentStore;
     }
-
-    private static String getStudentId() {
-        System.out.print("\n관리할 수강생의 번호를 입력하시오...");
-        return sc.next();
+    public static List<Subject> getSubjectStore(){
+        return subjectStore;
     }
-
-
-    /*---------------------------------------------------------------------------------------*/
-
-    // 수강생의 과목별 시험 회차 및 점수 등록
-    private static void createScore() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        System.out.println("시험 점수를 등록합니다...");
-
-        // 기능 구현
-
-        /* 위에 있는 과목들 가져오기 */
-        List<String> validSubjects = new ArrayList<>();
-        for (Subject subject : subjectStore){
-            validSubjects.add(subject.getSubjectName());
-        }
-        String subjectName;
-        /* 위에 있는 과목들 중 제대로 시험과목을 봤는지 */
-        while (true) {
-            System.out.println("시험과목을 입력하세요: ");
-            subjectName = sc.next();
-            if (validSubjects.contains(subjectName)){
-                break;
-            }
-            else {
-                System.out.println("시험과목이 항목에 없습니다. 다시 입력해주세요. ");
-            }
-        }
-        /* 시험 회차 입력 */
-        int test;
-        while (true){
-            System.out.print("시험 1~10회차 중 본인 시험회차를 입력해주세요: ");
-            test = sc.nextInt();
-
-            /* 올바른 시험 회차인지 확인하기 */
-            if (1<= test && test <=10){
-                break;
-            }
-            else{
-                System.out.print("잘못된 회차입니다. 다시 입력해주새요: ");
-            }
-        }
-        /* 시험 점수 입력 */
-        int testscore;
-        while (true){
-            System.out.print("시험 점수를 입력해주세요: ");
-            testscore = sc.nextInt();
-            /* 올바른 점수 입력했는지 확인 */
-            if (0<= testscore && testscore <=100){
-                break;
-            }
-            else {
-                System.out.print("잘못 입력하였습니다. 0~100 사이의 점수를 다시 입력해주세요: ");
-            }
-        }
-        /* 등록하려는 과목의 회차점수가 이미 등록되어있는지 확인하기, 중복하면 등록불가*/
-        for (Score score: scoreStore) {
-            /* score 객체 학생 ID,과목명,회차가 등록하려는 이미 저장된 것들과 동일한지 확인*/
-            /* if 내 조건을 만족하면 등록불가 */
-            if (score.getStudentId().equals(studentId)&&score.getSubjectName().equals(subjectName)&&score.getTest()==test){
-                System.out.println("등록하려는 과목의 회차 점수가 이미 등록되어 있습니다. 점수가 중복되어 등록될 수 없습니다. ");
-                return;
-            }
-        }
-        /* scoreStore에 넣기위한 score 객체만들기 */
-        Score score = new Score(sequence(INDEX_TYPE_SCORE),studentId,subjectName,test,testscore);
-        scoreStore.add(score);
-        System.out.println("\n점수 등록 성공!");
+    public static List<Score> getScoreStore(){
+        return scoreStore;
     }
-
-    /*---------------------------------------------------------------------------------------*/
-
-    // 수강생의 과목별 회차 점수 수정
-    private static void updateRoundScoreBySubject() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        // 기능 구현 (수정할 과목 및 회차, 점수)
-        System.out.println("시험 점수를 수정합니다...");
-        // 기능 구현
-        System.out.println("\n점수 수정 성공!");
+    public static List<Service> getServiceStore(){
+        return serviceStore;
     }
-
-    // 수강생의 특정 과목 회차별 등급 조회
-    private static void inquireRoundGradeBySubject() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        // 기능 구현 (조회할 특정 과목)
-        System.out.println("회차별 등급을 조회합니다...");
-        // 기능 구현
-        System.out.println("\n등급 조회 성공!");
-    }
-
 }
