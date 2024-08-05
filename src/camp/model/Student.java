@@ -1,3 +1,4 @@
+
 package camp.model;
 
 public class Student {
@@ -10,6 +11,7 @@ public class Student {
     }
 
     // Getter
+
     public String getStudentId() {
         return studentId;
     }
