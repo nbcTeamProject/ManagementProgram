@@ -20,6 +20,7 @@ public class Service {
     private int testScore;
     private char grade;
     private static Scanner sc = new Scanner(System.in);
+    private char averageGrade;
 
     private static List<Student>studentStore    = CampManagementApplication.getStudentStore();
     private static List<Score>scoreStore        = CampManagementApplication.getScoreStore();
@@ -44,7 +45,7 @@ public class Service {
 
     }
     //Subject 객체를 담은 리스트와 과목 이름으로 Subject 객체 찾는 메서드
-    public static Subject findSubject(List<Subject> subjectStore, String subject){
+    public static Subject findSubject( String subject){
         Subject answer;
         for (int i = 0; i < subjectStore.size(); i++) {
             Subject sub = subjectStore.get(i);
@@ -91,6 +92,7 @@ public class Service {
         }
         return subId;
     }
+
     // 매개변수로 받은 점수가  minNum~maxNum사이 인지 판별해 true false 반환하는 메서드
     public static boolean IsIn(int num, int minNum, int maxNum){
         boolean answer = true;
@@ -100,6 +102,7 @@ public class Service {
         return answer;
     }
     //점수와 과목 이름을 매개변수로 받아 grade 산정하는 메서드
+    // 점수 등록 과 점수 수정 시에 호출되어야 함
     public static char makeGrade(int score,Subject subject){
         String subjectType = subject.getSubjectType();
         char grade='z';
@@ -134,6 +137,23 @@ public class Service {
         }
         return grade;
     }
+    // 점수 등록 및 점수 수정 시에 호출되어야 함
+    public static char makeAveerageGrade(Student student,Subject subject){
+        char averageGrade;
+        int scoreSum = 0;
+        int testCount = 0;
+        int averagescore = 0;
+        for(Service service : serviceStore){
+            if(service.getStudentId().equals(student.getStudentId())&& service.getSubjectId().equals(subject.getSubjectId())){
+                testCount++;
+                scoreSum+=service.getTestscore();
+            }
+        }
+        averagescore = scoreSum / testCount;
+        averageGrade = makeGrade(averagescore,subject);
+        return averageGrade;
+    }
+
     // service 리스트와, 시험 회차, Student 객체, Subject 객체 입력 받아서 service 객체 반환하는 메서드
     public static Service findService(Student student, Subject subject, int test ){
         for (int i = 0; i < serviceStore.size(); i++) {
@@ -147,9 +167,9 @@ public class Service {
         return null;
     }
     // student 리스트와 studentId 받아서 Student 객체 반환하는 메서드
-    public static Student findStudent(List<Student>students, String studentId ){
-        for (int i = 0; i < students.size(); i++) {
-            Student student = students.get(i);
+    public static Student findStudent( String studentId ){
+        for (int i = 0; i < studentStore.size(); i++) {
+            Student student = studentStore.get(i);
             if (student.getStudentId().equals(studentId)) {
                 System.out.println("해당 Student 객체를 찾았습니다.");
                 return student;
@@ -218,7 +238,6 @@ public class Service {
         while (true){
             System.out.println("등록할 시험 회차를 입력하세요: ");
             test = sc.nextInt();
-            sc.nextLine();
             if (ScoreManager.IsTestIn(test)){ // 시험 회차 입력받고 1~10회차 사이인지 판단
                 System.out.println(test + " 회차 시험을 입력하셨습니다.");
                 break;
@@ -230,7 +249,6 @@ public class Service {
         while (true){
             System.out.println("시험 점수를 입력하세요: ");
             testscore = sc.nextInt();
-            sc.nextLine();
             if (ScoreManager.IsTestScoreIn(testscore)){ //시험 점수 입력받고 0~100 점 사이인지 판단
                 break;
             }
@@ -244,9 +262,9 @@ public class Service {
             return;
         }
         /* scoreStore에 넣기위한 score 객체만들기 */
-        score = new Score("SC"+test,test,testscore);
+        score = new Score("SC"+test ,test ,testscore);
         scoreStore.add(score);
-
+        System.out.println(scoreStore.size());
         service = new Service(score,subject,student.getStudentId());
         serviceStore.add(service);
         System.out.println("\n점수 등록 성공!");
@@ -294,6 +312,8 @@ public class Service {
 
         }
     }
+    /*---------------------------------------------------------------------------------------*/
+    // 수강생 특정 과목 특정 회차 점수 및 등급 조회
     static void inquireRoundGradeBySubject() {
         String sub;
         Service service;
@@ -303,7 +323,6 @@ public class Service {
         int testNum;
 
         student = StudentManager.getStudent(); // 관리할 수강생 고유 번호 입력 받기
-        sc.nextLine();
         if(student != null){ // Student 객체 찾았을 때
             subject = SubjectManager.getSubject(); // 과목 입력 받고 Subject 객체 반환 받음
             if(subject != null){ // Subject 객체 존재할 때
@@ -331,6 +350,29 @@ public class Service {
         }
     }
     /*---------------------------------------------------------------------------------------*/
+    // 특정 과목 평균 등급 보여주는 메서드
+    static void inquireAverageGradeBySubject(){
+        Service service;
+        Subject subject;
+        Student student;
+        Score score;
+        student = StudentManager.getStudent(); // 관리할 수강생 고유 번호 입력 받기
+        if(student != null) { // Student 객체 찾았을 때
+            subject = SubjectManager.getSubject(); // 과목 입력 받고 Subject 객체 반환 받음
+            if(subject != null) { // Subject 객체 존재할 때
+                System.out.println(subject.getSubjectName()+" 과목을 선택하셨습니다.");
+                char averageGrade = makeAveerageGrade(student,subject);
+                System.out.println(student.getStudentName() + " 학생의 " + subject.getSubjectName() +  " 과목 평균 등급은 "+averageGrade+ " 입니다.");
+            } else {// Subject 객체 못찾았을 때
+                System.out.println("점수 조회 화면으로 돌아갑니다.");
+                inquireAverageGradeBySubject();
+            }
+        } else{// Student 객체 못찾았을 때
+            System.out.println("평균 등급 조회 화면으로 돌아갑니다.");
+            inquireAverageGradeBySubject();
+        }
+    }
+    /*---------------------------------------------------------------------------------------*/
     // 점수 기능 전체 화면 메서드
     static void displayScoreView() {
         boolean flag = true;
@@ -340,7 +382,8 @@ public class Service {
             System.out.println("1. 수강생의 과목별 시험 회차 및 점수 등록");
             System.out.println("2. 수강생의 과목별 회차 점수 수정");
             System.out.println("3. 수강생의 특정 과목 회차별 등급 조회");
-            System.out.println("4. 메인 화면 이동");
+            System.out.println("4. 수강생의 특정 과목 평균 등급 조회");
+            System.out.println("5. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
 
@@ -348,7 +391,8 @@ public class Service {
                 case 1 -> Service.createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
                 case 2 -> Service.updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
                 case 3 -> Service.inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
-                case 4 -> flag = false; // 메인 화면 이동
+                case 4 -> Service.inquireAverageGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
+                case 5 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
