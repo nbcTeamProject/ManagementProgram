@@ -280,7 +280,7 @@ public class CampManagementApplication {
 
         System.out.println("수강생 등록 성공!\n");
 
-
+    }
         // 수강생 목록 조회
         private static void inquireStudent () {
             System.out.println("\n수강생 목록을 조회합니다...");
@@ -408,6 +408,6 @@ public class CampManagementApplication {
             // 기능 구현
             System.out.println("\n등급 조회 성공!");
         }
-
-
     }
+
+
