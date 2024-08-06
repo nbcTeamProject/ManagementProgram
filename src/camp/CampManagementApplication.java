@@ -9,9 +9,7 @@ import camp.model.SubjectManager;
 import camp.model.StudentManager;
 import camp.model.ScoreManager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 
 /**
@@ -26,7 +24,7 @@ import java.util.Scanner;
 public class CampManagementApplication {
     // 데이터 저장소
     private static List<Student> studentStore;
-    private static List<Subject> subjectStore;
+    public static List<Subject> subjectStore;
     private static List<Score> scoreStore;
     private static List <Service> serviceStore;
 
@@ -46,7 +44,7 @@ public class CampManagementApplication {
     // 스캐너
     private static Scanner sc = new Scanner(System.in);
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         setInitData();
         try {
             displayMainView();
@@ -56,7 +54,7 @@ public class CampManagementApplication {
     }
 
     // 초기 데이터 생성
-    private static void setInitData() {
+    public static void setInitData() {
         studentStore = new ArrayList<>();
         subjectStore = List.of(
                 new Subject(
@@ -109,6 +107,10 @@ public class CampManagementApplication {
         serviceStore = new ArrayList<>();
     }
 
+    public static List<Subject> getSubjectStore() {
+        return subjectStore;
+    }
+
     // index 자동 증가
     private static String sequence(String type) {
         switch (type) {
@@ -140,7 +142,9 @@ public class CampManagementApplication {
 
             switch (input) {
                 case 1 -> displayStudentView(); // 수강생 관리
+
                 case 2 -> Service.displayScoreView(); // 점수 관리
+
                 case 3 -> flag = false; // 프로그램 종료
                 default -> {
                     System.out.println("잘못된 입력입니다.\n되돌아갑니다!");
@@ -174,6 +178,7 @@ public class CampManagementApplication {
         }
     }
 
+
     // 수강생 등록
     private static void createStudent() {
         System.out.println("\n수강생을 등록합니다...");
@@ -181,18 +186,125 @@ public class CampManagementApplication {
         String studentName = sc.next();
         // 기능 구현 (필수 과목, 선택 과목)
 
-        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
+        //과목 가져오기
+        Map<String, String> subjects = new HashMap();
+        for (Subject subject : subjectStore) {
+            subjects.put(subject.getSubjectName(), subject.getSubjectType());
+        }
+        System.out.println(subjects);
+
+        //필수과목 등록
+        ArrayList<String> mandatoryArr = new ArrayList<>();
+        System.out.println("3개 이상의 필수 과목을 입력해주세요: ");
+        sc.nextLine();
+
+        while (true) {
+            String essential = sc.nextLine();
+            System.out.println(subjects.get(essential));
+
+            boolean isExist = mandatoryArr.contains(essential);
+
+            // 필수과목 입력
+            // essential이 필수과목이 아닌경우
+            if (subjects.get(essential) != "MANDATORY") {
+                System.out.println("필수과목이 아닙니다.");
+
+                //입력값이 강의 목록에 없는 경우
+            } else if (!subjects.containsKey(essential)) {
+                System.out.println("입력값이 강의목록에 없습니다. 다시 입력해주세요.");
+
+                //이미 수강신청을 한 경우
+            } else if (isExist) {
+                System.out.println("이미 수강신청한 과목입니다.");
+                mandatoryArr.remove(mandatoryArr.size() - 1);
+
+            } else {
+                mandatoryArr.add(essential);
+            }
+
+
+            System.out.println(mandatoryArr);
+
+
+            if (mandatoryArr.size() >= 5) {
+                System.out.println("더이상 신청할 수 없습니다.");
+                break;
+            }
+
+            if (mandatoryArr.size() == 3) {
+                System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
+                sc.nextLine();
+                String end = sc.next();
+                if (Objects.equals(end, "exit")) {
+                    System.out.println("입력을 종료합니다.");
+                    break;
+                }
+            }
+        }
+        // 선택과목 등록
+        ArrayList<String> choiceArr = new ArrayList<>();
+        System.out.println("2개 이상의 선택 과목을 입력해주세요: ");
+        sc.nextLine();
+
+        while (true) {
+            String choice = sc.nextLine();
+
+            boolean isChoiceExist = choiceArr.contains(choice);
+
+            // 선택과목 입력
+            // choice가 선택과목이 아닌경우
+            if (subjects.get(choice) != "CHOICE") {
+                System.out.println("선택과목이 아닙니다.");
+                //입력값이 강의 목록에 없는 경우
+            } else if (!subjects.containsKey(choice)) {
+                System.out.println("입력값이 강의목록에 없습니다. 다시 입력해주세요.");
+                //이미 수강신청을 한 경우
+            } else if (isChoiceExist) {
+                System.out.println("이미 수강신청한 과목입니다.");
+                choiceArr.remove(choiceArr.size() - 1);
+            } else {
+                choiceArr.add(choice);
+            }
+            if (choiceArr.size() == 4) {
+                System.out.println("더이상 신청할 수 없습니다.");
+                break;
+            }
+            System.out.println(choiceArr);
+
+            if (choiceArr.size() == 2) {
+                System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
+                sc.nextLine();
+                String end = sc.next();
+                if (Objects.equals(end, "exit")) {
+                    System.out.println("입력을 종료합니다.");
+                    break;
+                }
+            }
+
+        }
+        String studentId = sequence(INDEX_TYPE_STUDENT);
+        Student student = new Student(studentId, studentName, mandatoryArr, choiceArr); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
         studentStore.add(student);
+        System.out.println(studentStore.size());
+
+
         System.out.println("수강생 등록 성공!\n");
+
     }
 
     // 수강생 목록 조회
     private static void inquireStudent() {
         System.out.println("\n수강생 목록을 조회합니다...");
-        // 기능 구현
+        for (Student student : studentStore) {
+            int num = 1;
+            System.out.println(num + " 1) 수강생 이름 : " + student.getStudentName() + "\n  2) 수강생 고유번호 : " + student.getStudentId()
+                    + "\n  3) 수강 과목 : [필수 - " + student.getMandatorySubjects() + "]" + " [선택 - " + student.getChoiceSubjects() + "]");
+            num++;
+        }
         System.out.println("\n수강생 목록 조회 성공!");
     }
+
 
 
     //getter
@@ -208,4 +320,7 @@ public class CampManagementApplication {
     public static List<Service> getServiceStore(){
         return serviceStore;
     }
+
 }
+
+
