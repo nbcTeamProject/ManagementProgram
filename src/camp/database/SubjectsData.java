@@ -1,4 +1,5 @@
 package camp.database;
+import camp.model.Student;
 import camp.model.Subject;
 import java.util.ArrayList;
 import java.util.List;

@@ -4,21 +4,21 @@ package camp.model;
 
 public class Score {
     private String scoreId;
-    private int test;
-    private int testscore;
+    private int testNum;
+    private int testScore;
 
     /* CampManagementApplication  주석 score 객체만들기 */
-    public Score(String scoreId, int test, int testscore) {
+    public Score(String scoreId, int testNum, int testScore) {
         this.scoreId = scoreId;
-        this.test = test;
-        this.testscore = testscore;
+        this.testNum = testNum;
+        this.testScore = testScore;
     }
 
     // Getter
     public String getScoreId() {
         return scoreId;
     }
-    public int getTest() { return test;}
-    public int getTestscore() { return testscore; }
+    public int testNum() { return testNum;}
+    public int testScore() { return testScore; }
 
 }

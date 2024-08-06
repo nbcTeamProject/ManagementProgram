@@ -12,4 +12,7 @@ public class StudentsData {
     public void setInitStudents(){
         this.students = new ArrayList<>();
     }
+    public void addStudent(Student student){
+        this.students.add(student);
+    }
 }

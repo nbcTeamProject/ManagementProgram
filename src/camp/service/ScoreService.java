@@ -18,7 +18,7 @@ public class ScoreService extends Score {
     public ScoreService(String scoreId, int test, int testScore) {
         super(scoreId, test, testScore);
         this.scoreId    = super.getScoreId();
-        this.test       = super.getTest();
+        this.test       = super.testNum();
         this.testScore  = super.getTestscore();
     }
 
@@ -29,7 +29,7 @@ public class ScoreService extends Score {
 
         for (int i = 0; i < scoreStore.size(); i++) {
             Score tempScore = scoreStore.get(i);
-            if(tempScore.getTest()==tempTest){
+            if(tempScore.testNum()==tempTest){
                 System.out.println("해당 Score 객체를 찾았습니다.");
                 return tempScore;
             }

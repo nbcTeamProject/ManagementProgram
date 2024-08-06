@@ -1,5 +1,6 @@
 package camp.database;
 import camp.model.Score;
+import camp.model.Student;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,9 @@ public class ScoresData {
     }
     public void setInitScores(){
         this.scores = new ArrayList<>();
+    }
+    public void addScore(Score score){
+        this.scores.add(score);
     }
 }
 
