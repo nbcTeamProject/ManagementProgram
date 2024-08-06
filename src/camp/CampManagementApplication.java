@@ -4,7 +4,9 @@ package camp;
 import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
-
+import camp.database.ScoresData;
+import camp.database.StudentsData;
+import camp.database.SubjectsData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,11 +20,6 @@ import java.util.Scanner;
  * 구현에 도움을 주기위한 Base 프로젝트입니다. 자유롭게 이용해주세요!
  */
 public class CampManagementApplication {
-    // 데이터 저장소
-    private static List<Student> studentStore;
-    private static List<Subject> subjectStore;
-    private static List<Score> scoreStore;
-
     // 과목 타입
     private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";
     private static String SUBJECT_TYPE_CHOICE = "CHOICE";
@@ -49,8 +46,13 @@ public class CampManagementApplication {
 
     // 초기 데이터 생성
     private static void setInitData() {
-        studentStore = new ArrayList<>();
-        subjectStore = List.of(
+        ScoresData scoresData = new ScoresData();
+        scoresData.setInitScores();
+        StudentsData studentsData = new StudentsData();
+        studentsData.setInitStudents();
+        SubjectsData subjecstData = new SubjectsData();
+        subjecstData.setInitSubjects();
+        subjecstData.setSubjects(List.of(
                 new Subject(
                         sequence(INDEX_TYPE_SUBJECT),
                         "Java",
@@ -95,13 +97,11 @@ public class CampManagementApplication {
                         sequence(INDEX_TYPE_SUBJECT),
                         "MongoDB",
                         SUBJECT_TYPE_CHOICE
-                )
-        );
-        scoreStore = new ArrayList<>();
+                )));
     }
 
     // index 자동 증가
-    private static String sequence(String type) {
+    public static String sequence(String type) {
         switch (type) {
             case INDEX_TYPE_STUDENT -> {
                 studentIndex++;
@@ -238,6 +238,22 @@ public class CampManagementApplication {
         System.out.println("회차별 등급을 조회합니다...");
         // 기능 구현
         System.out.println("\n등급 조회 성공!");
+    }
+    //getter
+    public static String getINDEX_TYPE_STUDENT(){
+        return INDEX_TYPE_STUDENT;
+    }
+    public static String getINDEX_TYPE_SUBJECT(){
+        return INDEX_TYPE_SUBJECT;
+    }
+    public static String getINDEX_TYPE_SCORE(){
+        return INDEX_TYPE_SCORE;
+    }
+    public static String getSUBJECT_TYPE_MANDATORY(){
+        return SUBJECT_TYPE_MANDATORY;
+    }
+    public static String getSUBJECT_TYPE_CHOICE(){
+        return SUBJECT_TYPE_CHOICE;
     }
 
 }

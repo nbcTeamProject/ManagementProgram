@@ -10,7 +10,7 @@ public class Student {
     private  ArrayList<String> choiceArr;
 
 
-    public Student(String seq, String studentName, ArrayList<String> mandatoryArr, ArrayList<String> choiceArr) {
+    public Student(String seq, String studentName) {
         this.mandatoryArr = mandatoryArr;
         this.choiceArr = choiceArr;
         this.studentId = seq;
