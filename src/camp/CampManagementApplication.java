@@ -134,7 +134,7 @@ public class CampManagementApplication {
 
             switch (input) {
                 case 1 -> displayStudentView(); // 수강생 관리
-                //    case 2 -> displayScoreView(); // 점수 관리
+                //case 2 -> displayScoreView(); // 점수 관리
                 case 3 -> flag = false; // 프로그램 종료
                 default -> {
                     System.out.println("잘못된 입력입니다.\n되돌아갑니다!");
@@ -158,7 +158,7 @@ public class CampManagementApplication {
 
             switch (input) {
                 case 1 -> createStudent(); // 수강생 등록
-                //case 2 -> inquireStudent(); // 수강생 목록 조회
+                case 2 -> inquireStudent(); // 수강생 목록 조회
                 case 3 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
@@ -167,6 +167,7 @@ public class CampManagementApplication {
             }
         }
     }
+
 
     // 수강생 등록
     private static void createStudent() {
@@ -281,13 +282,18 @@ public class CampManagementApplication {
 
     }
         // 수강생 목록 조회
-        private static void inquireStudent() {
+        private static void inquireStudent () {
             System.out.println("\n수강생 목록을 조회합니다...");
-            // 기능 구현
+            for (Student student : studentStore) {
+                int num = 1;
+                System.out.println(num + " 1) 수강생 이름 : " + student.getStudentName() + "\n  2) 수강생 고유번호 : " + student.getStudentId()
+                        + "\n  3) 수강 과목 : [필수 - " + student.getMandatorySubjects() + "]" + " [선택 - " + student.getChoiceSubjects() + "]");
+                num++;
+            }
             System.out.println("\n수강생 목록 조회 성공!");
         }
 
-        private static void displayScoreView() {
+        private static void displayScoreView () {
             boolean flag = true;
             while (flag) {
                 System.out.println("==================================");
@@ -403,3 +409,5 @@ public class CampManagementApplication {
             System.out.println("\n등급 조회 성공!");
         }
     }
+
+
