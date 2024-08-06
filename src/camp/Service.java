@@ -1,5 +1,5 @@
 package camp;
 
-public class service {
+public class Service {
 
 }

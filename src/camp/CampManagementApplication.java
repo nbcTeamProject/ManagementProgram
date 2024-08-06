@@ -1,12 +1,12 @@
-
 package camp;
 
 import camp.model.Score;
 import camp.model.Student;
-import camp.model.StudentService;
 import camp.model.Subject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * Notification
@@ -15,12 +15,11 @@ import java.util.*;
  * model 의 클래스들과 아래 (// 기능 구현...) 주석 부분을 완성해주세요!
  * 프로젝트 구조를 변경하거나 기능을 추가해도 괜찮습니다!
  * 구현에 도움을 주기위한 Base 프로젝트입니다. 자유롭게 이용해주세요!
- * first 브랜치에서 코드 작성
  */
 public class CampManagementApplication {
     // 데이터 저장소
     private static List<Student> studentStore;
-    public static List<Subject> subjectStore;
+    private static List<Subject> subjectStore;
     private static List<Score> scoreStore;
 
     // 과목 타입
@@ -38,7 +37,7 @@ public class CampManagementApplication {
     // 스캐너
     private static Scanner sc = new Scanner(System.in);
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         setInitData();
         try {
             displayMainView();
@@ -48,7 +47,7 @@ public class CampManagementApplication {
     }
 
     // 초기 데이터 생성
-    public static void setInitData() {
+    private static void setInitData() {
         studentStore = new ArrayList<>();
         subjectStore = List.of(
                 new Subject(
@@ -98,10 +97,6 @@ public class CampManagementApplication {
                 )
         );
         scoreStore = new ArrayList<>();
-    }
-
-    public static List<Subject> getSubjectStore(){
-        return subjectStore;
     }
 
     // index 자동 증가
@@ -176,68 +171,20 @@ public class CampManagementApplication {
         String studentName = sc.next();
         // 기능 구현 (필수 과목, 선택 과목)
 
-        StudentService service = new StudentService();
-    //    String result = String.valueOf(service.getSubject());
-
-        //필수과목 등록
-        String[] mandatoryArr = new String[5];
-        System.out.println("필수과목을 최소 3가지를 입력해주세요: ");
-        String mandatory = sc.next();
-
-        for (int i = 0; i < mandatoryArr.length; i++){
-
-            if(!Objects.equals(mandatory,subjectStore)){
-                throw new Error("알맞은 과목을 선택하세요.");
-           }
-
-            mandatoryArr[i] = mandatory;
-
-            if ( i == 2){
-                System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
-                sc.nextLine();
-                String end = sc.nextLine();
-                if (Objects.equals(end, "exit")) {
-                    System.out.println("입력을 종료합니다.");
-                    break;
-                }
-            }
-        }
-
-        // 선택과목 등록
-        String[] choiceArr = new String[4];
-        for (int i = 0; i < mandatoryArr.length; i++){
-            System.out.println("2개 이상의 선택 과목을 입력해주세요: ");
-            String choice = sc.next();
-            choiceArr[i] = choice;
-
-            if ( i == 1){
-                System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
-                sc.nextLine();
-                String end = sc.nextLine();
-                if (Objects.equals(end, "exit")) {
-                    System.out.println("입력을 종료합니다.");
-                    break;
-                }
-            }
-
-        }
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
         // 기능 구현
 
-//
-//        System.out.println(student.getStudentId());
-//        System.out.println(student.getStudentName());
-//        System.out.println(Arrays.toString(mandatoryArr));
-//        System.out.println(Arrays.toString(choiceArr));
-
-
-       // System.out.println("수강생 등록 성공!\n");
+        System.out.println("수강생 등록 성공!\n");
     }
 
     // 수강생 목록 조회
     private static void inquireStudent() {
         System.out.println("\n수강생 목록을 조회합니다...");
-        // 기능 구현
+        for (Student student : studentStore) {
+            int num = 1;
+            System.out.println(num + " 1) 수강생 이름 : " + student.getStudentName() + "  2) 수강생 고유번호 : " + student.getStudentId());
+            num++;
+        }
         System.out.println("\n수강생 목록 조회 성공!");
     }
 
@@ -271,76 +218,13 @@ public class CampManagementApplication {
         return sc.next();
     }
 
-
-    /*---------------------------------------------------------------------------------------*/
-
     // 수강생의 과목별 시험 회차 및 점수 등록
     private static void createScore() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
         System.out.println("시험 점수를 등록합니다...");
-
         // 기능 구현
-
-        /* 위에 있는 과목들 가져오기 */
-        List<String> validSubjects = new ArrayList<>();
-        for (Subject subject : subjectStore){
-            validSubjects.add(subject.getSubjectName());
-        }
-        String subjectName;
-        /* 위에 있는 과목들 중 제대로 시험과목을 봤는지 */
-        while (true) {
-            System.out.println("시험과목을 입력하세요: ");
-            subjectName = sc.next();
-            if (validSubjects.contains(subjectName)){
-                break;
-            }
-            else {
-                System.out.println("시험과목이 항목에 없습니다. 다시 입력해주세요. ");
-            }
-        }
-        /* 시험 회차 입력 */
-        int test;
-        while (true){
-            System.out.print("시험 1~10회차 중 본인 시험회차를 입력해주세요: ");
-            test = sc.nextInt();
-
-            /* 올바른 시험 회차인지 확인하기 */
-            if (1<= test && test <=10){
-                break;
-            }
-            else{
-                System.out.print("잘못된 회차입니다. 다시 입력해주새요: ");
-            }
-        }
-        /* 시험 점수 입력 */
-        int testscore;
-        while (true){
-            System.out.print("시험 점수를 입력해주세요: ");
-            testscore = sc.nextInt();
-            /* 올바른 점수 입력했는지 확인 */
-            if (0<= testscore && testscore <=100){
-                break;
-            }
-            else {
-                System.out.print("잘못 입력하였습니다. 0~100 사이의 점수를 다시 입력해주세요: ");
-            }
-        }
-        /* 등록하려는 과목의 회차점수가 이미 등록되어있는지 확인하기, 중복하면 등록불가*/
-        for (Score score: scoreStore) {
-            /* score 객체 학생 ID,과목명,회차가 등록하려는 이미 저장된 것들과 동일한지 확인*/
-            /* if 내 조건을 만족하면 등록불가 */
-            if (score.getStudentId().equals(studentId)&&score.getSubjectName().equals(subjectName)&&score.getTest()==test){
-                System.out.println("등록하려는 과목의 회차 점수가 이미 등록되어 있습니다. 점수가 중복되어 등록될 수 없습니다. ");
-                return;
-            }
-        }
-        /* scoreStore에 넣기위한 score 객체만들기 */
-        Score score = new Score(sequence(INDEX_TYPE_SCORE),studentId,subjectName,test,testscore);
-        scoreStore.add(score);
         System.out.println("\n점수 등록 성공!");
     }
-
-    /*---------------------------------------------------------------------------------------*/
 
     // 수강생의 과목별 회차 점수 수정
     private static void updateRoundScoreBySubject() {
