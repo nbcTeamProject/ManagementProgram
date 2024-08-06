@@ -169,7 +169,6 @@ public class CampManagementApplication {
     }
 
 
-
     // 수강생 등록
     private static void createStudent() {
         System.out.println("\n수강생을 등록합니다...");
@@ -283,17 +282,18 @@ public class CampManagementApplication {
 
 
         // 수강생 목록 조회
-        private static void inquireStudent() {
+        private static void inquireStudent () {
             System.out.println("\n수강생 목록을 조회합니다...");
             for (Student student : studentStore) {
                 int num = 1;
-                System.out.println(num + " 1) 수강생 이름 : " + student.getStudentName() + "  2) 수강생 고유번호 : " + student.getStudentId());
+                System.out.println(num + " 1) 수강생 이름 : " + student.getStudentName() + "\n  2) 수강생 고유번호 : " + student.getStudentId()
+                        + "\n  3) 수강 과목 : [필수 - " + student.getMandatorySubjects() + "]" + " [선택 - " + student.getChoiceSubjects() + "]");
                 num++;
             }
             System.out.println("\n수강생 목록 조회 성공!");
         }
 
-        private static void displayScoreView() {
+        private static void displayScoreView () {
             boolean flag = true;
             while (flag) {
                 System.out.println("==================================");
@@ -411,5 +411,3 @@ public class CampManagementApplication {
 
 
     }
-
-}
