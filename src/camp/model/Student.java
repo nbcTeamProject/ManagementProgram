@@ -11,10 +11,10 @@ public class Student {
 
 
     public Student(String seq, String studentName, ArrayList<String> mandatoryArr, ArrayList<String> choiceArr) {
-        this.studentId = seq;
-        this.studentName = studentName;
         this.mandatoryArr = mandatoryArr;
         this.choiceArr = choiceArr;
+        this.studentId = seq;
+        this.studentName = studentName;
     }
 
 

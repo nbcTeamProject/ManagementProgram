@@ -2,12 +2,7 @@
 
 package camp;
 
-import camp.model.Score;
-import camp.model.Student;
-import camp.model.Subject;
-import camp.model.SubjectManager;
-import camp.model.StudentManager;
-import camp.model.ScoreManager;
+import camp.model.*;
 
 import java.util.*;
 
@@ -106,10 +101,7 @@ public class CampManagementApplication {
         scoreStore = new ArrayList<>();
         serviceStore = new ArrayList<>();
     }
-
-    public static List<Subject> getSubjectStore() {
-        return subjectStore;
-    }
+    
 
     // index 자동 증가
     private static String sequence(String type) {

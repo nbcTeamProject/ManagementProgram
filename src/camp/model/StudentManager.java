@@ -1,5 +1,6 @@
 
 package camp.model;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import camp.CampManagementApplication;
@@ -9,13 +10,13 @@ public class StudentManager extends Student{
     private String studentName;
     private static Scanner sc = new Scanner(System.in);
     private static List<Student>studentStore = CampManagementApplication.getStudentStore();
+    private ArrayList<String> mandatoryArr = getMandatorySubjects();
+    private  ArrayList<String> choiceArr = getChoiceSubjects();
 
     // StudentManager 호출되면 Student 객체 생성됨
-    public StudentManager(String seq, String studentName) {
-        super(seq, studentName);
-        this.studentId   = super.getStudentId();
+    public StudentManager(String seq, String studentName, ArrayList<String>  mandatoryArr,ArrayList<String> choiceArr) {
+        super(seq, studentName, mandatoryArr,choiceArr);
         this.studentName = super.getStudentName();
-
     }
 
     // 사용자에게 수강생 번호 입력받아 Student 객체 찾는 메서드

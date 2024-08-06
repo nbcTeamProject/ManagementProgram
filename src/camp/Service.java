@@ -1,14 +1,9 @@
 
 package camp;
-import camp.model.Score;
-import camp.model.Student;
-import camp.model.Subject;
-import camp.model.SubjectManager;
-import camp.model.StudentManager;
-import camp.model.ScoreManager;
 import java.util.List;
 import java.util.Scanner;
-import camp.CampManagementApplication;
+
+import camp.model.*;
 
 public class Service {
 
