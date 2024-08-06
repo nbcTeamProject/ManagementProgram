@@ -229,57 +229,57 @@ public class CampManagementApplication {
                     break;
                 }
             }
-       }
-            // 선택과목 등록
-            ArrayList<String> choiceArr = new ArrayList<>();
-            System.out.println("2개 이상의 선택 과목을 입력해주세요: ");
+        }
+        // 선택과목 등록
+        ArrayList<String> choiceArr = new ArrayList<>();
+        System.out.println("2개 이상의 선택 과목을 입력해주세요: ");
 
-            while (true) {
-                String choice = sc.nextLine();
+        while (true) {
+            String choice = sc.nextLine();
+            sc.nextLine();
+
+            boolean isChoiceExist = choiceArr.contains(choice);
+
+            // 선택과목 입력
+            // choice가 선택과목이 아닌경우
+            if (subjects.get(choice) != "CHOICE") {
+                System.out.println("선택과목이 아닙니다.");
+                //입력값이 강의 목록에 없는 경우
+            } else if (!subjects.containsKey(choice)) {
+                System.out.println("입력값이 강의목록에 없습니다. 다시 입력해주세요.");
+                //이미 수강신청을 한 경우
+            } else if (isChoiceExist) {
+                System.out.println("이미 수강신청한 과목입니다.");
+                choiceArr.remove(choiceArr.size() - 1);
+            } else {
+                choiceArr.add(choice);
+            }
+            if (choiceArr.size() == 4) {
+                System.out.println("더이상 신청할 수 없습니다.");
+                break;
+            }
+            System.out.println(choiceArr);
+
+            if (choiceArr.size() == 2) {
+                System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
                 sc.nextLine();
-
-                boolean isChoiceExist = choiceArr.contains(choice);
-
-                // 선택과목 입력
-                // choice가 선택과목이 아닌경우
-                if (subjects.get(choice) != "CHOICE") {
-                    System.out.println("선택과목이 아닙니다.");
-                    //입력값이 강의 목록에 없는 경우
-                } else if (!subjects.containsKey(choice)) {
-                    System.out.println("입력값이 강의목록에 없습니다. 다시 입력해주세요.");
-                    //이미 수강신청을 한 경우
-                } else if (isChoiceExist) {
-                    System.out.println("이미 수강신청한 과목입니다.");
-                    choiceArr.remove(choiceArr.size() - 1);
-                } else {
-                    choiceArr.add(choice);
-                }
-                if (choiceArr.size() == 4) {
-                    System.out.println("더이상 신청할 수 없습니다.");
+                String end = sc.next();
+                if (Objects.equals(end, "exit")) {
+                    System.out.println("입력을 종료합니다.");
                     break;
                 }
-                System.out.println(choiceArr);
-
-                if (choiceArr.size() == 2) {
-                    System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
-                    sc.nextLine();
-                    String end = sc.next();
-                    if (Objects.equals(end, "exit")) {
-                        System.out.println("입력을 종료합니다.");
-                        break;
-                    }
-                }
-
             }
-            String studentId = sequence(INDEX_TYPE_STUDENT);
-            Student student = new Student(studentId, studentName, mandatoryArr, choiceArr); // 수강생 인스턴스 생성 예시 코드
-            // 기능 구현
-            studentStore.add(student);
-            System.out.println(studentStore.size());
 
-            System.out.println("수강생 등록 성공!\n");
+        }
+        String studentId = sequence(INDEX_TYPE_STUDENT);
+        Student student = new Student(studentId, studentName, mandatoryArr, choiceArr); // 수강생 인스턴스 생성 예시 코드
+        // 기능 구현
+        studentStore.add(student);
+        System.out.println(studentStore.size());
 
+        System.out.println("수강생 등록 성공!\n");
 
+    }
         // 수강생 목록 조회
         private static void inquireStudent() {
             System.out.println("\n수강생 목록을 조회합니다...");
@@ -402,8 +402,4 @@ public class CampManagementApplication {
             // 기능 구현
             System.out.println("\n등급 조회 성공!");
         }
-
-
-       }
-
     }
