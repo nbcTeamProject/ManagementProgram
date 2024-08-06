@@ -1,11 +1,12 @@
 
-package camp.model;
+package camp.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import camp.CampManagementApplication;
+import camp.model.Student;
 
-public class StudentManager extends Student{
+public class StudentService extends Student {
     private String studentId;
     private String studentName;
     private static Scanner sc = new Scanner(System.in);
@@ -14,7 +15,7 @@ public class StudentManager extends Student{
     private  ArrayList<String> choiceArr = getChoiceSubjects();
 
     // StudentManager 호출되면 Student 객체 생성됨
-    public StudentManager(String seq, String studentName, ArrayList<String>  mandatoryArr,ArrayList<String> choiceArr) {
+    public StudentService(String seq, String studentName, ArrayList<String>  mandatoryArr, ArrayList<String> choiceArr) {
         super(seq, studentName, mandatoryArr,choiceArr);
         this.studentName = super.getStudentName();
     }
@@ -32,6 +33,17 @@ public class StudentManager extends Student{
             }
         }
         System.out.println("해당 Student 객체를 찾지못했습니다.");
+        return null;
+    }
+    public static Student findStudent( String studentId ){
+        for (int i = 0; i < studentStore.size(); i++) {
+            Student student = studentStore.get(i);
+            if (student.getStudentId().equals(studentId)) {
+                System.out.println("해당 Student 객체를 찾았습니다.");
+                return student;
+            }
+        }
+        System.out.println("해당 Student 객체를 찾지 못했습니다");
         return null;
     }
 

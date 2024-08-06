@@ -1,6 +1,6 @@
 
 package camp.model;
-
+import camp.model.Score;
 import java.util.ArrayList;
 
 public class Student {

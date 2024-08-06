@@ -1,17 +1,18 @@
 
-package camp.model;
+package camp.service;
 import java.util.List;
 import java.util.Scanner;
 import camp.CampManagementApplication;
+import camp.model.Subject;
 
-public class SubjectManager extends Subject{
+public class SubjectService extends Subject {
     private String subjectId;
     private String subjectName;
     private String subjectType;
     private static List<Subject> subjectStore = CampManagementApplication.getSubjectStore();
     private static Scanner sc = new Scanner(System.in);
 
-    public SubjectManager(String seq, String subjectName, String subjectType) {
+    public SubjectService(String seq, String subjectName, String subjectType) {
         super(seq, subjectName, subjectType);
         this.subjectId   = super.getSubjectId();
         this.subjectName = super.getSubjectName();
