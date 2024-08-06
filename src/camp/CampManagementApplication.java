@@ -7,6 +7,9 @@ import camp.model.Subject;
 import camp.database.ScoresData;
 import camp.database.StudentsData;
 import camp.database.SubjectsData;
+import camp.service.StudentService;
+import camp.service.SubjectService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -209,17 +212,28 @@ public class CampManagementApplication {
         }
     }
 
-    private static String getStudentId() {
-        System.out.print("\n관리할 수강생의 번호를 입력하시오...");
-        return sc.next();
-    }
 
     // 수강생의 과목별 시험 회차 및 점수 등록
     private static void createScore() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        System.out.println("시험 점수를 등록합니다...");
-        // 기능 구현
-        System.out.println("\n점수 등록 성공!");
+        // 점수 등록 기능 구현
+        // 학생 번호 입력 받기
+        StudentService studentService = new StudentService();
+        SubjectService subjectService = new SubjectService();
+        Student student = studentService.getStudent();
+        if(student != null){ //  Student 객체 찾았을 때
+            System.out.println("시험 점수를 등록합니다...");
+            // 과목 입력 받기
+            Subject subject = subjectService.getSubject();
+            if(subject != null){ // 과목 찾았을 때
+
+            }else{ // 과목 못찾았을 때
+                System.out.println("과목을 다시 입력받습니다.");
+            }
+            System.out.println("\n점수 등록 성공!");
+        }else{//  Student 객체 못찾았을 때
+            System.out.println("학생 번호를 다시 입력받습니다.");
+            createScore();
+        }
     }
 
     // 수강생의 과목별 회차 점수 수정

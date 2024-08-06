@@ -2,31 +2,17 @@
 package camp.service;
 import java.util.List;
 import java.util.Scanner;
-import camp.CampManagementApplication;
 import camp.model.Score;
-import camp.model.Student;
 import camp.model.Subject;
 import camp.database.ScoresData;
 
-public class ScoreService extends Score {
-    private  String scoreId;
-    private  int testNum;
-    private  int testScore;
-    private  List<Score>scores;
+public class ScoreService {
     private  Scanner sc = new Scanner(System.in);
-
-
-    public ScoreService(String scoreId, int test, int testScore) {
-        super(scoreId, test, testScore);
-        this.scoreId    = super.getScoreId();
-        this.testNum    = super.getTestNum();
-        this.testScore  = super.getTestScore();
-        ScoresData scoresData = new ScoresData();
-        this.scores = scoresData.getScores();
-    }
 
     //시험 회차 입력 받아서 Score(점수 등록이 되어있는 객체) 객체 반환하는 메서드
     public Score getScore() {
+        ScoresData scoresData = new ScoresData();
+        List<Score> scores = scoresData.getScores();
         System.out.print("\n시험 회차를 입력해주세요:");
         int tempTest = sc.nextInt();
 
@@ -56,8 +42,6 @@ public class ScoreService extends Score {
         return false;
     }
 
-    public void setTestScore(int sc) {
-        testScore  = sc;}
 
     public  char makeGrade(int score, Subject subject){
         String subjectType = subject.getSubjectType();
@@ -93,22 +77,8 @@ public class ScoreService extends Score {
         }
         return grade;
     }
-    public  char makeAveerageGrade(Student student, Subject subject){
-        char averageGrade;
-        int scoreSum = 0;
-        int testCount = 0;
-        int averagescore = 0;
-        for(Service service : serviceStore){
-            if(service.getStudentId().equals(student.getStudentId())&& service.getSubjectId().equals(subject.getSubjectId())){
-                testCount++;
-                scoreSum+=service.getTestscore();
-            }
-        }
-        averagescore = scoreSum / testCount;
-        averageGrade = makeGrade(averagescore,subject);
-        return averageGrade;
-    }
-    public void setTestscore(Student student,Subject subject, Score score){
+
+    /*public void setTestscore(Student student,Subject subject, Score score){
         System.out.println(student.getStudentName()+" 학생의 점수를 수정합니다.");
         System.out.println("점수를 입력하세요: ");
         int testSc = sc.nextInt();
@@ -121,5 +91,5 @@ public class ScoreService extends Score {
             System.out.println("잘못된 점수를 입력하였습니다. 점수 조회 화면으로 돌아갑니다.");
             updateRoundScoreBySubject();
         }
-    }
+    }*/
 }

@@ -2,36 +2,27 @@
 package camp.service;
 import java.util.List;
 import java.util.Scanner;
-import camp.CampManagementApplication;
+import camp.database.SubjectsData;
 import camp.model.Subject;
 
-public class SubjectService extends Subject {
-    private String subjectId;
-    private String subjectName;
-    private String subjectType;
-    private static List<Subject> subjectStore = CampManagementApplication.getSubjectStore();
-    private static Scanner sc = new Scanner(System.in);
-
-    public SubjectService(String seq, String subjectName, String subjectType) {
-        super(seq, subjectName, subjectType);
-        this.subjectId   = super.getSubjectId();
-        this.subjectName = super.getSubjectName();
-        this.subjectType = super.getSubjectType();
-    }
+public class SubjectService  {
+    private Scanner sc = new Scanner(System.in);
 
     // 과목 이름 입력받아서 Subject 객체 반환하는 메서드
-    public static Subject getSubject() {
+    public Subject getSubject() {
+        SubjectsData subjectsData = new SubjectsData();
+        List<Subject> tempSubjects = subjectsData.getSubjects();
         System.out.println("시험과목을 입력하세요: ");
         String subjectName = sc.nextLine();
 
-        for (int i = 0; i < subjectStore.size(); i++) {
-            Subject tempSubject = subjectStore.get(i);
+        for (int i = 0; i < tempSubjects.size(); i++) {
+            Subject tempSubject = tempSubjects.get(i);
             if(tempSubject.getSubjectName().equals(subjectName)){
-                System.out.println("해당 Subject 객체를 찾았습니다.");
+                System.out.println("해당 과목을 찾았습니다.");
                 return tempSubject;
             }
         }
-        System.out.println("해당 Subject 객체를 찾지못했습니다.");
+        System.out.println("해당 과목을 찾지못했습니다.");
         return null;
     }
 }
