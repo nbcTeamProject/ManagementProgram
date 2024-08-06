@@ -6,20 +6,23 @@ import camp.CampManagementApplication;
 import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
+import camp.database.ScoresData;
 
 public class ScoreService extends Score {
-    private static String scoreId;
-    private static int test;
-    private static int testScore;
-    private static Scanner sc = new Scanner(System.in);
-    private static List<Score>scoreStore = CampManagementApplication.getScoreStore();
+    private  String scoreId;
+    private  int testNum;
+    private  int testScore;
+    private  List<Score>scores;
+    private  Scanner sc = new Scanner(System.in);
 
 
     public ScoreService(String scoreId, int test, int testScore) {
         super(scoreId, test, testScore);
         this.scoreId    = super.getScoreId();
-        this.test       = super.testNum();
-        this.testScore  = super.getTestscore();
+        this.testNum    = super.getTestNum();
+        this.testScore  = super.getTestScore();
+        ScoresData scoresData = new ScoresData();
+        this.scores = scoresData.getScores();
     }
 
     //시험 회차 입력 받아서 Score(점수 등록이 되어있는 객체) 객체 반환하는 메서드
@@ -27,9 +30,9 @@ public class ScoreService extends Score {
         System.out.print("\n시험 회차를 입력해주세요:");
         int tempTest = sc.nextInt();
 
-        for (int i = 0; i < scoreStore.size(); i++) {
-            Score tempScore = scoreStore.get(i);
-            if(tempScore.testNum()==tempTest){
+        for (int i = 0; i < scores.size(); i++) {
+            Score tempScore = scores.get(i);
+            if(tempScore.getTestNum()==tempTest){
                 System.out.println("해당 Score 객체를 찾았습니다.");
                 return tempScore;
             }

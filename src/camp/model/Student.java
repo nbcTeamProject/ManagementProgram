@@ -4,15 +4,13 @@ import camp.model.Score;
 import java.util.ArrayList;
 
 public class Student {
-    private String studentId;
-    private String studentName;
-    private  ArrayList<String> mandatoryArr;
-    private  ArrayList<String> choiceArr;
+    private  String studentId;
+    private  String studentName;
+    private  ArrayList<Subject> mandatoryArr;
+    private  ArrayList<Subject> choiceArr;
 
 
     public Student(String seq, String studentName) {
-        this.mandatoryArr = mandatoryArr;
-        this.choiceArr = choiceArr;
         this.studentId = seq;
         this.studentName = studentName;
     }
@@ -28,11 +26,23 @@ public class Student {
         return studentName;
     }
 
-    public  ArrayList<String> getMandatorySubjects() {
+    public  ArrayList<Subject> getMandatorySubjects() {
         return mandatoryArr;
     }
 
-    public  ArrayList<String> getChoiceSubjects() {
+    public  ArrayList<Subject> getChoiceSubjects() {
         return choiceArr;
+    }
+
+    //Setter
+    public void setMandatoryArr(ArrayList<Subject> inputMandatoryArr){
+        for(Subject sub : inputMandatoryArr){
+            this.mandatoryArr.add(sub);
+        }
+    }
+    public void setChoiceArr(ArrayList<Subject> inputChoiceArr){
+        for(Subject sub : inputChoiceArr){
+            this.choiceArr.add(sub);
+        }
     }
 }

@@ -18,7 +18,7 @@ public class Score {
     public String getScoreId() {
         return scoreId;
     }
-    public int testNum() { return testNum;}
-    public int testScore() { return testScore; }
+    public int getTestNum() { return testNum;}
+    public int getTestScore() { return testScore; }
 
 }

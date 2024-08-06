@@ -9,15 +9,17 @@ import camp.model.Student;
 public class StudentService extends Student {
     private String studentId;
     private String studentName;
-    private static Scanner sc = new Scanner(System.in);
     private static List<Student>studentStore = CampManagementApplication.getStudentStore();
     private ArrayList<String> mandatoryArr = getMandatorySubjects();
     private  ArrayList<String> choiceArr = getChoiceSubjects();
+    private static Scanner sc = new Scanner(System.in);
+
 
     // StudentManager 호출되면 Student 객체 생성됨
-    public StudentService(String seq, String studentName, ArrayList<String>  mandatoryArr, ArrayList<String> choiceArr) {
-        super(seq, studentName, mandatoryArr,choiceArr);
+    public StudentService(String seq, String studentName) {
+        super(seq, studentName);
         this.studentName = super.getStudentName();
+        this.studentId = super.getStudentId();
     }
 
     // 사용자에게 수강생 번호 입력받아 Student 객체 찾는 메서드
@@ -35,6 +37,7 @@ public class StudentService extends Student {
         System.out.println("해당 Student 객체를 찾지못했습니다.");
         return null;
     }
+
     public static Student findStudent( String studentId ){
         for (int i = 0; i < studentStore.size(); i++) {
             Student student = studentStore.get(i);
