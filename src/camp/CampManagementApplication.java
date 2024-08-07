@@ -199,7 +199,8 @@ public class CampManagementApplication {
             System.out.println("1. 수강생의 과목별 시험 회차 및 점수 등록");
             System.out.println("2. 수강생의 과목별 회차 점수 수정");
             System.out.println("3. 수강생의 특정 과목 회차별 등급 조회");
-            System.out.println("4. 메인 화면 이동");
+            System.out.println("4. 수강생의 특정 과목 평균 등급 조회");
+            System.out.println("5. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
 
@@ -207,7 +208,8 @@ public class CampManagementApplication {
                 case 1 -> createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
                 case 2 -> updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
                 case 3 -> inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
-                case 4 -> flag = false; // 메인 화면 이동
+                case 4 -> inquireAverageGradeBySubject(); // 수강생의 특정 과목 평균 등급 조회
+                case 5 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
@@ -376,6 +378,51 @@ public class CampManagementApplication {
         } else{//  Student 객체 못찾았을 때
             System.out.println("학생 번호를 다시 입력받습니다.");
             updateRoundScoreBySubject();
+        }
+    }
+    private static void inquireAverageGradeBySubject(){
+        StudentService studentService = new StudentService();
+        SubjectService subjectService = new SubjectService();
+        ScoreService scoreService = new ScoreService();
+        boolean flag1 = true;
+        System.out.println("과목별 평균 등급을 조회합니다...");
+        // 기능 구현
+        Student student = studentService.getStudent();
+        if(student != null){ //  Student 객체 찾았을 때
+            while(flag1){ // 시험 과목 입력 루프
+                // 과목 입력 받기
+                Subject subject = subjectService.getSubject();
+                if(subject != null){ // 과목 찾았을 때
+                    flag1 = false;
+                    int scoreCount = 0;
+                    int scoreSum = 0;
+                    char averageGrade;
+                    for(Score score : ScoresData.getScores()){
+                        if(score.getRegiStudent().equals(student)&&score.getRegiSubject().equals(subject)){
+                            scoreCount++;
+                            scoreSum += score.getTestScore();
+                        }
+                    }
+                    if(scoreCount!=0){ // 등록된 점수 하나라도 찾았을 때
+                        averageGrade = scoreService.makeGrade(scoreSum/scoreCount,subject);
+                        System.out.println(student.getStudentName() + " 학생의 "+subject.getSubjectName()+" 과목에 등록된 점수 "+scoreCount+"건을 찾았습니다.");
+                        System.out.println(student.getStudentName() + " 학생의 "+subject.getSubjectName()+" 과목 평균 점수는 "+scoreSum/scoreCount+" 입니다.");
+                        System.out.println(student.getStudentName() + " 학생의 "+subject.getSubjectName()+" 과목 평균 등급은 "+averageGrade+" 입니다.");
+
+                    }else{ // 등록된 점수 못찾았을 때
+                        System.out.println("해당 과목에 등록된 점수가 없습니다.");
+                        System.out.println("평균 등급 조회 화면으로 돌아갑니다.");
+                        inquireAverageGradeBySubject();
+                    }
+
+                }else{ // 과목 못찾았을 때
+                    System.out.println("과목을 다시 입력받습니다.");
+                }
+            } // while1
+
+        } else{//  Student 객체 못찾았을 때
+            System.out.println("학생 번호를 다시 입력받습니다.");
+            inquireAverageGradeBySubject();
         }
     }
     //getter
