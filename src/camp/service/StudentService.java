@@ -5,13 +5,12 @@ import java.util.Scanner;
 import camp.model.Student;
 import camp.database.StudentsData;
 
-public class StudentService  {
+public class StudentService {
     private Scanner sc = new Scanner(System.in);
 
     // 사용자에게 수강생 번호 입력받아 Student 객체 찾는 메서드
     public Student getStudent() {
-        StudentsData studentsData = new StudentsData();
-        List<Student> tempStudents = studentsData.getStudents();
+        List<Student> tempStudents = StudentsData.getStudents();
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
         String tempStudentNum = sc.next();
         for (int i = 0; i < tempStudents.size(); i++) {
@@ -26,8 +25,7 @@ public class StudentService  {
     }
 
     public Student getStudentById( String studentId ){
-        StudentsData studentsData = new StudentsData();
-        List<Student> tempStudents = studentsData.getStudents();
+        List<Student> tempStudents = StudentsData.getStudents();
         for (int i = 0; i < tempStudents.size(); i++) {
             Student student = tempStudents.get(i);
             if (student.getStudentId().equals(studentId)) {

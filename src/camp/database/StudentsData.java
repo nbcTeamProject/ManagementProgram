@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentsData {
-    private List<Student> students;
+    private static List<Student> students;
 
-    public List<Student> getStudents(){
+    public static List<Student> getStudents(){
         return students;
     }
-    public void setInitStudents(){
-        this.students = new ArrayList<>();
+    public static void setInitStudents(){
+        students = new ArrayList<>();
     }
-    public void addStudent(Student student){
-        this.students.add(student);
+    public static void addStudent(Student student){
+        students.add(student);
+    }
+    public static int getStudentsSize(){
+        return students.size();
     }
 }

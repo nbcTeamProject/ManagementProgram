@@ -3,15 +3,15 @@ package camp.service;
 import java.util.List;
 import java.util.Scanner;
 import camp.database.SubjectsData;
+import camp.model.Score;
 import camp.model.Subject;
 
-public class SubjectService  {
+public class SubjectService {
     private Scanner sc = new Scanner(System.in);
 
     // 과목 이름 입력받아서 Subject 객체 반환하는 메서드
     public Subject getSubject() {
-        SubjectsData subjectsData = new SubjectsData();
-        List<Subject> tempSubjects = subjectsData.getSubjects();
+        List<Subject> tempSubjects = SubjectsData.getSubjects();
         System.out.println("시험과목을 입력하세요: ");
         String subjectName = sc.nextLine();
 

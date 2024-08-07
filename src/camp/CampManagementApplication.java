@@ -7,6 +7,7 @@ import camp.model.Subject;
 import camp.database.ScoresData;
 import camp.database.StudentsData;
 import camp.database.SubjectsData;
+import camp.service.ScoreService;
 import camp.service.StudentService;
 import camp.service.SubjectService;
 
@@ -23,6 +24,9 @@ import java.util.Scanner;
  * 구현에 도움을 주기위한 Base 프로젝트입니다. 자유롭게 이용해주세요!
  */
 public class CampManagementApplication {
+    // 데이터 저장소
+
+
     // 과목 타입
     private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";
     private static String SUBJECT_TYPE_CHOICE = "CHOICE";
@@ -49,13 +53,10 @@ public class CampManagementApplication {
 
     // 초기 데이터 생성
     private static void setInitData() {
-        ScoresData scoresData = new ScoresData();
-        scoresData.setInitScores();
-        StudentsData studentsData = new StudentsData();
-        studentsData.setInitStudents();
-        SubjectsData subjecstData = new SubjectsData();
-        subjecstData.setInitSubjects();
-        subjecstData.setSubjects(List.of(
+        ScoresData.setInitScores();
+        StudentsData.setInitStudents();
+        SubjectsData.setInitSubjects();
+        SubjectsData.setSubjects(List.of(
                 new Subject(
                         sequence(INDEX_TYPE_SUBJECT),
                         "Java",
@@ -101,6 +102,7 @@ public class CampManagementApplication {
                         "MongoDB",
                         SUBJECT_TYPE_CHOICE
                 )));
+
     }
 
     // index 자동 증가
@@ -176,6 +178,8 @@ public class CampManagementApplication {
         // 기능 구현 (필수 과목, 선택 과목)
 
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
+        StudentsData.addStudent(student);
+        System.out.println();
         // 기능 구현
         System.out.println("수강생 등록 성공!\n");
     }
@@ -201,8 +205,8 @@ public class CampManagementApplication {
 
             switch (input) {
                 case 1 -> createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
-                case 2 -> updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
-                case 3 -> inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
+                case 2 -> System.out.println("2"); // 수강생의 과목별 회차 점수 수정
+                case 3 -> System.out.println("3"); // 수강생의 특정 과목 회차별 등급 조회
                 case 4 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
@@ -219,18 +223,54 @@ public class CampManagementApplication {
         // 학생 번호 입력 받기
         StudentService studentService = new StudentService();
         SubjectService subjectService = new SubjectService();
+        ScoreService scoreService     = new ScoreService();
+        boolean flag1 =true;
+        boolean flag2 =true;
+        boolean flag3 =true;
+
+        System.out.println("시험 점수를 등록합니다...");
         Student student = studentService.getStudent();
         if(student != null){ //  Student 객체 찾았을 때
-            System.out.println("시험 점수를 등록합니다...");
-            // 과목 입력 받기
-            Subject subject = subjectService.getSubject();
-            if(subject != null){ // 과목 찾았을 때
+            while(flag1){ // 시험 과목 입력 루프// 과목 입력 받기
+                Subject subject = subjectService.getSubject();
+                if(subject != null){ // 과목 찾았을 때
+                    flag1 = false;
+                    while(flag2){ // 시험 회차 입력 루프
+                        System.out.print("\n시험 회차를 입력해주세요:");
+                        int tempTestNum = sc.nextInt();
+                        if(1<=tempTestNum && tempTestNum <=10){
+                            Score score = scoreService.getScore(student,subject,tempTestNum);
+                            if(score==null){ // 시험 정보 못 찾았을 때 점수 등록 가능
+                                flag2 = false;
+                                while(flag3){// 점수 등록 루프
+                                    System.out.println("점수 등록이 가능합니다.");
+                                    System.out.println("점수를 입력하세요: ");
+                                    int tempTestScore = sc.nextInt();
+                                    if(0<=tempTestScore && tempTestScore <= 100){ // 점수 범위 안에 있을 때
+                                        Score tempscore = new Score(sequence(INDEX_TYPE_SCORE),tempTestNum,tempTestScore);
+                                        scoreService.registScore(student,subject,tempscore,tempTestScore);
+                                        System.out.println("\n점수 등록 성공!");
+                                        flag3 =false;
+                                    }else {
+                                        System.out.println("올바르지 않은 점수입니다.");
+                                        System.out.println("다시 입력하세요: ");
+                                    }
+                                }
+                            }else{ // 등록된 시험 정보 찾았을 때
+                                System.out.println("이미 등록된 시험은 점수 등록이 불가합니다.");
+                                System.out.println("회차 입력을 다시 받습니다.");
+                            }
+                        } else { // 시험 회차 1~10 아닐 때
+                            System.out.println("잘못된 회차 입니다.");
+                            System.out.println("회차를 다시 입력하세요.");
+                        }
+                    }
+                }else{ // 과목 못찾았을 때
+                    System.out.println("과목을 다시 입력받습니다.");
+                }
+            } // while1
 
-            }else{ // 과목 못찾았을 때
-                System.out.println("과목을 다시 입력받습니다.");
-            }
-            System.out.println("\n점수 등록 성공!");
-        }else{//  Student 객체 못찾았을 때
+        } else{//  Student 객체 못찾았을 때
             System.out.println("학생 번호를 다시 입력받습니다.");
             createScore();
         }
@@ -238,21 +278,39 @@ public class CampManagementApplication {
 
     // 수강생의 과목별 회차 점수 수정
     private static void updateRoundScoreBySubject() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        // 기능 구현 (수정할 과목 및 회차, 점수)
-        System.out.println("시험 점수를 수정합니다...");
+        StudentService studentService = new StudentService();
+        SubjectService subjectService = new SubjectService();
+        ScoreService scoreService     = new ScoreService();
+        boolean flag1 =true;
+        boolean flag2 =true;
+        boolean flag3 =true;
         // 기능 구현
-        System.out.println("\n점수 수정 성공!");
-    }
+        System.out.println("시험 점수를 수정합니다...");
+        Student student = studentService.getStudent();
+        if(student != null){ //  Student 객체 찾았을 때
+            while(flag1){
+                Subject subject = subjectService.getSubject();
+                if(subject != null) { // 과목 찾았을 때
 
-    // 수강생의 특정 과목 회차별 등급 조회
+                }
+                else {
+
+                }
+            }
+        System.out.println("\n점수 수정 성공!");
+    }else{//  Student 객체 못찾았을 때
+            System.out.println("학생 번호를 다시 입력받습니다.");
+            updateRoundScoreBySubject();
+        }
+
+    /*// 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
         // 기능 구현 (조회할 특정 과목)
         System.out.println("회차별 등급을 조회합니다...");
         // 기능 구현
         System.out.println("\n등급 조회 성공!");
-    }
+    }*/
     //getter
     public static String getINDEX_TYPE_STUDENT(){
         return INDEX_TYPE_STUDENT;
