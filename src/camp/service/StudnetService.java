@@ -45,18 +45,17 @@ public class StudnetService {
     // 수강생
 
     // 수강생 저장
-    public void saveStudent(){
+    public static String saveStudent() {
 
         Map<String, String> subjects = new HashMap();
-        for (Subject subject : SubjectsData.getSubjects() ) {
+        for (Subject subject : SubjectsData.getSubjects()) {
             subjects.put(subject.getSubjectName(), subject.getSubjectType());
         }
 
         System.out.println("\n수강생을 등록합니다...");
         System.out.print("수강생 이름 입력: ");
         String studentName = sc.next();
-        Student student = new Student(CampManagementApplication.sequence(CampManagementApplication.getINDEX_TYPE_STUDENT()),studentName);
-
+        Student student = new Student(CampManagementApplication.sequence(CampManagementApplication.getINDEX_TYPE_STUDENT()), studentName);
 
 
         //필수과목 등록
@@ -131,7 +130,7 @@ public class StudnetService {
                 System.out.println("이미 수강신청한 과목입니다.");
                 choiceArr.remove(choiceArr.size() - 1);
             } else {
-               student.setChoiceArr(choiceArr);
+                student.setChoiceArr(choiceArr);
             }
             if (choiceArr.size() == 4) {
                 System.out.println("더이상 신청할 수 없습니다.");
@@ -151,6 +150,7 @@ public class StudnetService {
 
         }
         StudentsData.addStudent(student);
+        return studentName;
     }
 
 }
