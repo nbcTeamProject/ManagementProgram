@@ -174,8 +174,8 @@ public class CampManagementApplication {
 
     // 수강생 등록
     private static void createStudent() {
-        String savedStudent = StudentService.saveStudent();
-        System.out.println(savedStudent);
+        String studentName = StudentService.saveStudent();
+        System.out.println(studentName);
         System.out.println("저장완료");
 
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
@@ -188,7 +188,7 @@ public class CampManagementApplication {
     // 수강생 목록 조회
     private static void inquireStudent() {
         System.out.println("\n수강생 목록을 조회합니다...");
-        for (Student student : studentStore) {
+        for (Student student : StudentsData.getStudents()) {
             int num = 1;
             System.out.println(num + " 1) 수강생 이름 : " + student.getStudentName() + "\n  2) 수강생 고유번호 : " + student.getStudentId()
                     + "\n  3) 수강 과목 : [필수 - " + student.getMandatorySubjects() + "]" + " [선택 - " + student.getChoiceSubjects() + "]");
@@ -233,41 +233,41 @@ public class CampManagementApplication {
         // 학생 번호 입력 받기
         StudentService studentService = new StudentService();
         SubjectService subjectService = new SubjectService();
-        ScoreService scoreService     = new ScoreService();
-        boolean flag1 =true;
-        boolean flag2 =true;
-        boolean flag3 =true;
+        ScoreService scoreService = new ScoreService();
+        boolean flag1 = true;
+        boolean flag2 = true;
+        boolean flag3 = true;
 
         System.out.println("시험 점수를 등록합니다...");
         Student student = studentService.getStudent();
-        if(student != null){ //  Student 객체 찾았을 때
-            while(flag1){ // 시험 과목 입력 루프// 과목 입력 받기
+        if (student != null) { //  Student 객체 찾았을 때
+            while (flag1) { // 시험 과목 입력 루프// 과목 입력 받기
                 Subject subject = subjectService.getSubject();
-                if(subject != null){ // 과목 찾았을 때
+                if (subject != null) { // 과목 찾았을 때
                     flag1 = false;
-                    while(flag2){ // 시험 회차 입력 루프
+                    while (flag2) { // 시험 회차 입력 루프
                         System.out.print("\n시험 회차를 입력해주세요:");
                         int tempTestNum = sc.nextInt();
-                        if(1<=tempTestNum && tempTestNum <=10){
-                            Score score = scoreService.getScore(student,subject,tempTestNum);
-                            if(score==null){ // 시험 정보 못 찾았을 때 점수 등록 가능
+                        if (1 <= tempTestNum && tempTestNum <= 10) {
+                            Score score = scoreService.getScore(student, subject, tempTestNum);
+                            if (score == null) { // 시험 정보 못 찾았을 때 점수 등록 가능
                                 flag2 = false;
-                                while(flag3){// 점수 등록 루프
+                                while (flag3) {// 점수 등록 루프
                                     System.out.println("점수 등록이 가능합니다.");
                                     System.out.println("점수를 입력하세요: ");
                                     int tempTestScore = sc.nextInt();
-                                    if(0<=tempTestScore && tempTestScore <= 100){ // 점수 범위 안에 있을 때
-                                        Score tempscore = new Score(sequence(INDEX_TYPE_SCORE),tempTestNum,tempTestScore);
-                                        scoreService.registScore(student,subject,tempscore,tempTestScore);
+                                    if (0 <= tempTestScore && tempTestScore <= 100) { // 점수 범위 안에 있을 때
+                                        Score tempscore = new Score(sequence(INDEX_TYPE_SCORE), tempTestNum, tempTestScore);
+                                        scoreService.registScore(student, subject, tempscore, tempTestScore);
                                         ScoresData.addScore(tempscore);
                                         System.out.println("\n점수 등록 성공!");
-                                        flag3 =false;
-                                    }else {
+                                        flag3 = false;
+                                    } else {
                                         System.out.println("올바르지 않은 점수입니다.");
                                         System.out.println("다시 입력하세요: ");
                                     }
                                 }
-                            }else{ // 등록된 시험 정보 찾았을 때
+                            } else { // 등록된 시험 정보 찾았을 때
                                 System.out.println("이미 등록된 시험은 점수 등록이 불가합니다.");
                                 System.out.println("회차 입력을 다시 받습니다.");
                             }
@@ -276,12 +276,12 @@ public class CampManagementApplication {
                             System.out.println("회차를 다시 입력하세요.");
                         }
                     }
-                }else{ // 과목 못찾았을 때
+                } else { // 과목 못찾았을 때
                     System.out.println("과목을 다시 입력받습니다.");
                 }
             } // while1
 
-        } else{//  Student 객체 못찾았을 때
+        } else {//  Student 객체 못찾았을 때
             System.out.println("학생 번호를 다시 입력받습니다.");
             createScore();
         }
@@ -298,33 +298,33 @@ public class CampManagementApplication {
         // 기능 구현
         System.out.println("시험 점수를 수정합니다...");
         Student student = studentService.getStudent();
-        if(student != null){ //  Student 객체 찾았을 때
-            while(flag1){ // 시험 과목 입력 루프
+        if (student != null) { //  Student 객체 찾았을 때
+            while (flag1) { // 시험 과목 입력 루프
                 // 과목 입력 받기
                 Subject subject = subjectService.getSubject();
-                if(subject != null){ // 과목 찾았을 때
+                if (subject != null) { // 과목 찾았을 때
                     flag1 = false;
-                    while(flag2){ // 시험 회차 입력 루프
+                    while (flag2) { // 시험 회차 입력 루프
                         System.out.print("\n시험 회차를 입력해주세요:");
                         int tempTestNum = sc.nextInt();
-                        if(1<=tempTestNum && tempTestNum <=10){
-                            Score score = scoreService.getScore(student,subject,tempTestNum);
-                            if(score!=null){ // 등록된 시험 정보 찾아야 수정 가능
+                        if (1 <= tempTestNum && tempTestNum <= 10) {
+                            Score score = scoreService.getScore(student, subject, tempTestNum);
+                            if (score != null) { // 등록된 시험 정보 찾아야 수정 가능
                                 flag2 = false;
-                                while(flag3){// 점수 등록 루프
+                                while (flag3) {// 점수 등록 루프
                                     System.out.println("점수를 수정합니다.");
                                     System.out.println("점수를 입력하세요: ");
                                     int tempTestScore = sc.nextInt();
-                                    if(0<=tempTestScore && tempTestScore <= 100){ // 점수 범위 안에 있을 때
-                                        scoreService.registScore(student,subject,score,tempTestScore);
+                                    if (0 <= tempTestScore && tempTestScore <= 100) { // 점수 범위 안에 있을 때
+                                        scoreService.registScore(student, subject, score, tempTestScore);
                                         System.out.println("\n점수 수정 성공!");
-                                        flag3 =false;
-                                    }else {
+                                        flag3 = false;
+                                    } else {
                                         System.out.println("올바르지 않은 점수입니다.");
                                         System.out.println("다시 입력하세요: ");
                                     }
                                 }
-                            }else{ // 등록된 시험 정보 못찾았을 때
+                            } else { // 등록된 시험 정보 못찾았을 때
                                 System.out.println("해당 데이터를 조회할 수 없습니다.");
                                 System.out.println("회차 입력을 다시 받습니다.");
                             }
@@ -333,16 +333,17 @@ public class CampManagementApplication {
                             System.out.println("회차를 다시 입력하세요.");
                         }
                     }
-                }else{ // 과목 못찾았을 때
+                } else { // 과목 못찾았을 때
                     System.out.println("과목을 다시 입력받습니다.");
                 }
             } // while1
 
-        } else{//  Student 객체 못찾았을 때
+        } else {//  Student 객체 못찾았을 때
             System.out.println("학생 번호를 다시 입력받습니다.");
             updateRoundScoreBySubject();
         }
     }
+
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
         StudentService studentService = new StudentService();
@@ -353,43 +354,45 @@ public class CampManagementApplication {
         System.out.println("회차별 등급을 조회합니다...");
         // 기능 구현
         Student student = studentService.getStudent();
-        if(student != null){ //  Student 객체 찾았을 때
-            while(flag1){ // 시험 과목 입력 루프
+        if (student != null) { //  Student 객체 찾았을 때
+            while (flag1) { // 시험 과목 입력 루프
                 // 과목 입력 받기
                 Subject subject = subjectService.getSubject();
-                if(subject != null){ // 과목 찾았을 때
+                if (subject != null) { // 과목 찾았을 때
                     flag1 = false;
-                    while(flag2){ // 시험 회차 입력 루프
+                    while (flag2) { // 시험 회차 입력 루프
                         System.out.print("\n시험 회차를 입력해주세요:");
                         int tempTestNum = sc.nextInt();
-                        if(1<=tempTestNum && tempTestNum <=10){
-                            Score score = scoreService.getScore(student,subject,tempTestNum);
-                            if(score!=null){ // 등록된 시험 정보 찾아야 조회 가능
+                        if (1 <= tempTestNum && tempTestNum <= 10) {
+                            Score score = scoreService.getScore(student, subject, tempTestNum);
+                            if (score != null) { // 등록된 시험 정보 찾아야 조회 가능
                                 flag2 = false;
-                                System.out.println(student.getStudentName()+" 학생의 점수를 조회합니다.");
-                                System.out.println(student.getStudentName()+" 학생의 "+subject.getSubjectName()+" 과목 성적은 "+score.getTestScore()+" 점으로 등급은" + score.getGrade() + " 입니다.");
+                                System.out.println(student.getStudentName() + " 학생의 점수를 조회합니다.");
+                                System.out.println(student.getStudentName() + " 학생의 " + subject.getSubjectName() + " 과목 성적은 " + score.getTestScore() + " 점으로 등급은" + score.getGrade() + " 입니다.");
                                 System.out.println("\n등급 조회 성공!");
 
-                            }else{ // 등록된 시험 정보 못찾았을 때
+                            } else { // 등록된 시험 정보 못찾았을 때
                                 System.out.println("해당 데이터를 조회할 수 없습니다.");
                                 System.out.println("회차 입력을 다시 받습니다.");
-                            }                        } else { // 시험 회차 1~10 아닐 때
+                            }
+                        } else { // 시험 회차 1~10 아닐 때
                             System.out.println("잘못된 회차 입니다.");
                             System.out.println("회차를 다시 입력하세요.");
                         }
                     }
-                }else{ // 과목 못찾았을 때
+                } else { // 과목 못찾았을 때
                     System.out.println("과목을 다시 입력받습니다.");
                 }
             } // while1
 
-        } else{//  Student 객체 못찾았을 때
+        } else {//  Student 객체 못찾았을 때
             System.out.println("학생 번호를 다시 입력받습니다.");
             updateRoundScoreBySubject();
         }
 
     }
-    private static void inquireAverageGradeBySubject(){
+
+    private static void inquireAverageGradeBySubject() {
         StudentService studentService = new StudentService();
         SubjectService subjectService = new SubjectService();
         ScoreService scoreService = new ScoreService();
@@ -397,47 +400,52 @@ public class CampManagementApplication {
         System.out.println("과목별 평균 등급을 조회합니다...");
         // 기능 구현
         Student student = studentService.getStudent();
-        if(student != null){ //  Student 객체 찾았을 때
-            while(flag1){ // 시험 과목 입력 루프
+        if (student != null) { //  Student 객체 찾았을 때
+            while (flag1) { // 시험 과목 입력 루프
                 // 과목 입력 받기
                 Subject subject = subjectService.getSubject();
-                if(subject != null){ // 과목 찾았을 때
+                if (subject != null) { // 과목 찾았을 때
                     flag1 = false;
-                    char averageGrade = scoreService.makeAverageGrade(student,subject);
-                    if(averageGrade!='z'){ // 등록된 점수 하나라도 찾았을 때
-                        System.out.println(student.getStudentName() + " 학생의 "+subject.getSubjectName()+" 과목 평균 등급은 "+averageGrade+" 입니다.");
+                    char averageGrade = scoreService.makeAverageGrade(student, subject);
+                    if (averageGrade != 'z') { // 등록된 점수 하나라도 찾았을 때
+                        System.out.println(student.getStudentName() + " 학생의 " + subject.getSubjectName() + " 과목 평균 등급은 " + averageGrade + " 입니다.");
 
-                    }else{ // 등록된 점수 못찾았을 때
+                    } else { // 등록된 점수 못찾았을 때
                         System.out.println("해당 과목에 등록된 점수가 없습니다.");
                         System.out.println("평균 등급 조회 화면으로 돌아갑니다.");
                         inquireAverageGradeBySubject();
                     }
 
-                }else{ // 과목 못찾았을 때
+                } else { // 과목 못찾았을 때
                     System.out.println("과목을 다시 입력받습니다.");
                 }
             } // while1
 
-        } else{//  Student 객체 못찾았을 때
+        } else {//  Student 객체 못찾았을 때
             System.out.println("학생 번호를 다시 입력받습니다.");
             inquireAverageGradeBySubject();
         }
     }
 
     //getter
-    public static String getINDEX_TYPE_STUDENT(){
+    public static String getINDEX_TYPE_STUDENT() {
         return INDEX_TYPE_STUDENT;
     }
-    public static String getINDEX_TYPE_SUBJECT(){
+
+    public static String getINDEX_TYPE_SUBJECT() {
         return INDEX_TYPE_SUBJECT;
     }
-    public static String getINDEX_TYPE_SCORE(){
+
+    public static String getINDEX_TYPE_SCORE() {
         return INDEX_TYPE_SCORE;
     }
-    public static String getSUBJECT_TYPE_MANDATORY(){
+
+    public static String getSUBJECT_TYPE_MANDATORY() {
         return SUBJECT_TYPE_MANDATORY;
     }
-    public static String getSUBJECT_TYPE_CHOICE(){
+
+    public static String getSUBJECT_TYPE_CHOICE() {
         return SUBJECT_TYPE_CHOICE;
     }
+}
 

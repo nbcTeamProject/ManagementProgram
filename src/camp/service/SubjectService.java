@@ -25,4 +25,12 @@ public class SubjectService {
         System.out.println("해당 과목을 찾지못했습니다.");
         return null;
     }
+    public Subject getSubject(String subjectName){
+        for(Subject tempSubject : SubjectsData.getSubjects()){
+            if(tempSubject.getSubjectName().equals(subjectName)){
+                return tempSubject;
+            }
+        }
+        return null;
+    }
 }

@@ -13,6 +13,16 @@ public class Student {
     public Student(String seq, String studentName) {
         this.studentId = seq;
         this.studentName = studentName;
+        this.mandatoryArr = new ArrayList<>();
+        this.choiceArr = new ArrayList<>();
+    }
+
+    public void addMandatoryArr(Subject subject){
+        this.mandatoryArr.add(subject);
+    }
+
+    public void addChoiceArr(Subject subject){
+        this.choiceArr.add(subject);
     }
 
 
