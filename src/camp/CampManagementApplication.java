@@ -393,6 +393,7 @@ public class CampManagementApplication {
                 // 과목 입력 받기
                 Subject subject = subjectService.getSubject();
                 if(subject != null){ // 과목 찾았을 때
+                    flag1 = false;
                     char averageGrade = scoreService.makeAverageGrade(student,subject);
                     if(averageGrade!='z'){ // 등록된 점수 하나라도 찾았을 때
                         System.out.println(student.getStudentName() + " 학생의 "+subject.getSubjectName()+" 과목 평균 등급은 "+averageGrade+" 입니다.");

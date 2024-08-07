@@ -3,7 +3,6 @@ package camp.service;
 import java.util.List;
 import java.util.Scanner;
 import camp.database.SubjectsData;
-import camp.model.Score;
 import camp.model.Subject;
 
 public class SubjectService {
