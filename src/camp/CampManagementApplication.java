@@ -393,20 +393,8 @@ public class CampManagementApplication {
                 // 과목 입력 받기
                 Subject subject = subjectService.getSubject();
                 if(subject != null){ // 과목 찾았을 때
-                    flag1 = false;
-                    int scoreCount = 0;
-                    int scoreSum = 0;
-                    char averageGrade;
-                    for(Score score : ScoresData.getScores()){
-                        if(score.getRegiStudent().equals(student)&&score.getRegiSubject().equals(subject)){
-                            scoreCount++;
-                            scoreSum += score.getTestScore();
-                        }
-                    }
-                    if(scoreCount!=0){ // 등록된 점수 하나라도 찾았을 때
-                        averageGrade = scoreService.makeGrade(scoreSum/scoreCount,subject);
-                        System.out.println(student.getStudentName() + " 학생의 "+subject.getSubjectName()+" 과목에 등록된 점수 "+scoreCount+"건을 찾았습니다.");
-                        System.out.println(student.getStudentName() + " 학생의 "+subject.getSubjectName()+" 과목 평균 점수는 "+scoreSum/scoreCount+" 입니다.");
+                    char averageGrade = scoreService.makeAverageGrade(student,subject);
+                    if(averageGrade!='z'){ // 등록된 점수 하나라도 찾았을 때
                         System.out.println(student.getStudentName() + " 학생의 "+subject.getSubjectName()+" 과목 평균 등급은 "+averageGrade+" 입니다.");
 
                     }else{ // 등록된 점수 못찾았을 때

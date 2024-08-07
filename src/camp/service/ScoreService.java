@@ -91,8 +91,27 @@ public class ScoreService {
         }
         return grade;
     }
-
-
+    public char makeAverageGrade(Student student, Subject subject) {
+        char averageGrade;
+        int scoreCount = 0;
+        int scoreSum = 0;
+        int averageScore;
+        for(Score score : ScoresData.getScores()){
+            if(score.getRegiStudent().equals(student)&&score.getRegiSubject().equals(subject)){
+                scoreCount++;
+                scoreSum += score.getTestScore();
+            }
+        }
+        if(scoreCount !=0){// Score 하나라도 존재 할 때
+            averageScore = scoreSum/scoreCount;
+            averageGrade = makeGrade(averageScore,subject);
+            System.out.println("평균 점수: "+averageScore);
+            System.out.println("평균 등급: " + averageGrade);
+            return averageGrade;
+        }else {
+            return 'z';
+        }
+    }
 }
 
 
