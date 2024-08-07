@@ -2,6 +2,7 @@
 package camp.model;
 import camp.model.Score;
 import java.util.ArrayList;
+import camp.database.SubjectsData;
 
 public class Student {
     private  String studentId;
@@ -13,6 +14,16 @@ public class Student {
     public Student(String seq, String studentName) {
         this.studentId = seq;
         this.studentName = studentName;
+        this.mandatoryArr = new ArrayList<>();
+        this.choiceArr = new ArrayList<>();
+    }
+
+    public void addMandatoryArr(Subject subject){
+        this.mandatoryArr.add(subject);
+    }
+
+    public void addChoiceArr(Subject subject){
+        this.choiceArr.add(subject);
     }
 
 
@@ -34,19 +45,25 @@ public class Student {
         return choiceArr;
     }
 
+    public String[] getMandatorySubjectsByStr(){
+        String[] answer = new String[mandatoryArr.size()];
+        int idx = 0;
+        for(Subject sub : getMandatorySubjects()){
+            answer[idx] = sub.getSubjectName();
+            idx++;
+        }
+        return answer;
+    }
+    public String[] getChoiceSubjectsByStr(){
+        String[] answer = new String[choiceArr.size()];
+        int idx = 0;
+        for(Subject sub : getChoiceSubjects()){
+            answer[idx] = sub.getSubjectName();
+            idx++;
+        }
+        return answer;
+    }
     //Setter
 
-    //필수과목 저장
-    public void setMandatoryArr(ArrayList<Subject> inputMandatoryArr){
-        for(Subject sub : inputMandatoryArr){
-            this.mandatoryArr.add(sub);
-        }
-    }
 
-    //선택과목 저장
-    public void setChoiceArr(ArrayList<Subject> inputChoiceArr){
-        for(Subject sub : inputChoiceArr){
-            this.choiceArr.add(sub);
-        }
-    }
 }

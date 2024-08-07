@@ -8,6 +8,7 @@ import camp.model.Subject;
 import camp.CampManagementApplication;
 import java.util.*;
 import java.util.Scanner;
+import camp.service.SubjectService;
 
 
 
@@ -47,104 +48,109 @@ public class StudentService {
 
 
     // 수강생 저장
+    // subject -> 해쉬맵 <과목이름, 과목 타입>
     public static String saveStudent() {
-
+        SubjectService subjectService = new SubjectService();
         Map<String, String> subjects = new HashMap();
         for (Subject subject : SubjectsData.getSubjects()) {
             subjects.put(subject.getSubjectName(), subject.getSubjectType());
         }
+        System.out.println(subjects.entrySet());
 
         System.out.println("\n수강생을 등록합니다...");
         System.out.print("수강생 이름 입력: ");
-        String studentName = sc.next();
+        String studentName = sc.nextLine();
         Student student = new Student(CampManagementApplication.sequence(CampManagementApplication.getINDEX_TYPE_STUDENT()), studentName);
 
-
         //필수과목 등록
-        ArrayList<Subject> mandatoryArr = new ArrayList<>();
-        System.out.println("3개 이상의 필수 과목을 입력해주세요: ");
-        sc.nextLine();
-
+        ArrayList<Subject> mandatoryArr = student.getMandatorySubjects();
+        Loop1:
         while (true) {
+            System.out.println("3개 이상의 필수 과목을 입력해주세요: ");
+            System.out.println("현재 등록한 필수 과목 수: "+student.getMandatorySubjects().size());
             String essential = sc.nextLine();
-            System.out.println(subjects.get(essential));
-
-            boolean isExist = mandatoryArr.contains(essential);
-
-            // 필수과목 입력
-            // essential이 필수과목이 아닌경우
-            if (subjects.get(essential) != "MANDATORY") {
-                System.out.println("필수과목이 아닙니다.");
-
-                //입력값이 강의 목록에 없는 경우
-            } else if (!subjects.containsKey(essential)) {
-                System.out.println("입력값이 강의목록에 없습니다. 다시 입력해주세요.");
-
-                //이미 수강신청을 한 경우
-            } else if (isExist) {
-                System.out.println("이미 수강신청한 과목입니다.");
-                mandatoryArr.remove(mandatoryArr.size() - 1);
-
-            } else {
-                student.setMandatoryArr(mandatoryArr);
+            boolean isExist = false;
+            for(Subject element : mandatoryArr){
+                if(element.getSubjectName().equals(essential)){
+                    isExist = true;
+                    break;
+                }
             }
 
-
-            System.out.println(mandatoryArr);
-
+            // isExist -> true 이면 되돌아가서 과목 입력 다시 받음: 처리할 프로세스 없음 순위 마지막
+            if(!isExist){ //  중복 값이 아닌 과목 입력 받았을 때
+                if (!subjects.containsKey(essential)) { // 중복 값 아니면서 과목 목록에 없는 과목 입력 받았을 때
+                    System.out.println("해당 과목은 필수 과목이 아닙니다.");}
+                else { // 중복 값 아니면서 과목 목록에 있는 과목 입력 받을 때
+                    if(subjects.get(essential).equals("MANDATORY")){ // 중복 아닌 필수 과목 입력 받았을 때
+                        Subject sub = subjectService.getSubject(essential);
+                        student.addMandatoryArr(sub);
+                        System.out.println("해당 필수 과목을 추가하였습니다.");
+                    }else { // 중복 아닌 선택 과목 입력 받았을 때
+                        System.out.println("선택 과목이 아닌 필수 과목을 입력해주세요.");
+                    }
+                }
+            } else { // 중복 값 입력 받았을 때
+                System.out.println("이미 수강 신청한 과목입니다.");
+            }
 
             if (mandatoryArr.size() >= 5) {
                 System.out.println("더이상 신청할 수 없습니다.");
                 break;
             }
 
-            if (mandatoryArr.size() == 3) {
+            if (mandatoryArr.size() >= 3) {
                 System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
-                sc.nextLine();
-                String end = sc.next();
+                String end = sc.nextLine();
                 if (Objects.equals(end, "exit")) {
                     System.out.println("입력을 종료합니다.");
                     break;
                 }
             }
-
-
         }
         // 선택과목 등록
-        ArrayList<Subject> choiceArr = new ArrayList<>();
-        System.out.println("2개 이상의 선택 과목을 입력해주세요: ");
-        sc.nextLine();
+        ArrayList<Subject> choiceArr = student.getChoiceSubjects();
+
 
         while (true) {
-            String choice = sc.nextLine();
+            System.out.println("2개 이상의 선택 과목을 입력해주세요: ");
+            System.out.println("현재 등록한 선택 과목 수: "+student.getChoiceSubjects().size());
 
-            boolean isChoiceExist = choiceArr.contains(choice);
+            String choice = sc.nextLine();
+            boolean isChoiceExist = false;
+
+            for(Subject element : choiceArr){
+                if(element.getSubjectName().equals(choice)){
+                    isChoiceExist = true;
+                }
+            }
 
             // 선택과목 입력
             // choice가 선택과목이 아닌경우
-
-            if (subjects.get(choice) != "CHOICE") {
-                System.out.println("선택과목이 아닙니다.");
-                //입력값이 강의 목록에 없는 경우
-            } else if (!subjects.containsKey(choice)) {
-                System.out.println("입력값이 강의목록에 없습니다. 다시 입력해주세요.");
-                //이미 수강신청을 한 경우
-            } else if (isChoiceExist) {
-                System.out.println("이미 수강신청한 과목입니다.");
-                choiceArr.remove(choiceArr.size() - 1);
-            } else {
-                student.setChoiceArr(choiceArr);
+            if(!isChoiceExist){ //  중복 값이 아닌 과목 입력 받았을 때
+                if (!subjects.containsKey(choice)) { // 중복 값 아니면서 과목 목록에 없는 과목 입력 받았을 때
+                    System.out.println("해당 과목은 선택 과목이 아닙니다.");}
+                else { // 중복 값 아니면서 과목 목록에 있는 과목 입력 받을 때
+                    if(subjects.get(choice).equals("CHOICE")){ // 중복 아닌 필수 과목 입력 받았을 때
+                        Subject sub = subjectService.getSubject(choice);
+                        student.addChoiceArr(sub);
+                        System.out.println("해당 선택 과목을 추가하였습니다.");
+                    }else { // 중복 아닌 선택 과목 입력 받았을 때
+                        System.out.println("필수 과목이 아닌 선택 과목을 입력해주세요.");
+                    }
+                }
+            } else { // 중복 값 입력 받았을 때
+                System.out.println("이미 수강 신청한 과목입니다.");
             }
-            if (choiceArr.size() == 4) {
+
+            if (choiceArr.size() >= 4) {
                 System.out.println("더이상 신청할 수 없습니다.");
                 break;
             }
-            System.out.println(choiceArr);
 
-            if (choiceArr.size() == 2) {
+            if (choiceArr.size() >= 2) {
                 System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
-                sc.nextLine();
-                String end = sc.next();
+                String end = sc.nextLine();
                 if (Objects.equals(end, "exit")) {
                     System.out.println("입력을 종료합니다.");
                     break;
