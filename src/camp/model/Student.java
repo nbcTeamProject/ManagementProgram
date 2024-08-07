@@ -26,7 +26,6 @@ public class Student {
         return studentName;
     }
 
-
     public  ArrayList<Subject> getMandatorySubjects() {
         return mandatoryArr;
     }
@@ -36,6 +35,7 @@ public class Student {
     }
 
     //Setter
+
     //필수과목 저장
     public void setMandatoryArr(ArrayList<Subject> inputMandatoryArr){
         for(Subject sub : inputMandatoryArr){

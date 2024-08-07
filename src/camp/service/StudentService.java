@@ -1,3 +1,4 @@
+
 package camp.service;
 
 import camp.database.StudentsData;
@@ -7,6 +8,7 @@ import camp.model.Subject;
 import camp.CampManagementApplication;
 import java.util.*;
 import java.util.Scanner;
+
 
 
 public class StudentService {
@@ -42,7 +44,7 @@ public class StudentService {
         return null;
     }
 
-    // 수강생
+
 
     // 수강생 저장
     public static String saveStudent() {
@@ -120,6 +122,7 @@ public class StudentService {
 
             // 선택과목 입력
             // choice가 선택과목이 아닌경우
+
             if (subjects.get(choice) != "CHOICE") {
                 System.out.println("선택과목이 아닙니다.");
                 //입력값이 강의 목록에 없는 경우
@@ -152,5 +155,5 @@ public class StudentService {
         StudentsData.addStudent(student);
         return studentName;
     }
-
 }
+
