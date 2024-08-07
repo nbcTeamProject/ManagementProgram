@@ -9,6 +9,7 @@ import camp.model.Subject;
 public class SubjectService {
     private Scanner sc = new Scanner(System.in);
 
+
     // 과목 이름 입력받아서 Subject 객체 반환하는 메서드
     public Subject getSubject() {
         List<Subject> tempSubjects = SubjectsData.getSubjects();
