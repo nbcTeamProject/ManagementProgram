@@ -16,13 +16,10 @@ public class Subject {
     public String getSubjectId() {
         return subjectId;
     }
-
     public String getSubjectName() {
         return subjectName;
     }
-
     public String getSubjectType() {
         return subjectType;
     }
-
 }
