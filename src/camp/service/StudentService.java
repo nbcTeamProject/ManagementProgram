@@ -9,8 +9,11 @@ import camp.CampManagementApplication;
 import java.util.*;
 import java.util.Scanner;
 
+
+
 public class StudentService {
     private static Scanner sc = new Scanner(System.in);
+
 
     // 사용자에게 수강생 번호 입력받아 Student 객체 찾는 메서드
     public Student getStudent() {
@@ -41,9 +44,10 @@ public class StudentService {
         return null;
     }
 
-    //
+
+
     // 수강생 저장
-    public String saveStudent() {
+    public static String saveStudent() {
 
         Map<String, String> subjects = new HashMap();
         for (Subject subject : SubjectsData.getSubjects()) {
@@ -118,7 +122,8 @@ public class StudentService {
 
             // 선택과목 입력
             // choice가 선택과목이 아닌경우
-            if (!subjects.get(choice).equals( "CHOICE")) {
+
+            if (subjects.get(choice) != "CHOICE") {
                 System.out.println("선택과목이 아닙니다.");
                 //입력값이 강의 목록에 없는 경우
             } else if (!subjects.containsKey(choice)) {
@@ -151,3 +156,4 @@ public class StudentService {
         return studentName;
     }
 }
+

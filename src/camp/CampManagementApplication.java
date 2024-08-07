@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 /**
  * Notification
  * Java, 객체지향이 아직 익숙하지 않은 분들은 위한 소스코드 틀입니다.
@@ -102,7 +103,6 @@ public class CampManagementApplication {
                         "MongoDB",
                         SUBJECT_TYPE_CHOICE
                 )));
-
     }
 
     // index 자동 증가
@@ -137,6 +137,7 @@ public class CampManagementApplication {
             switch (input) {
                 case 1 -> displayStudentView(); // 수강생 관리
                 case 2 -> displayScoreView(); // 점수 관리
+
                 case 3 -> flag = false; // 프로그램 종료
                 default -> {
                     System.out.println("잘못된 입력입니다.\n되돌아갑니다!");
@@ -170,12 +171,12 @@ public class CampManagementApplication {
         }
     }
 
+
     // 수강생 등록
     private static void createStudent() {
-        System.out.println("\n수강생을 등록합니다...");
-        System.out.print("수강생 이름 입력: ");
-        String studentName = sc.next();
-        // 기능 구현 (필수 과목, 선택 과목)
+        String savedStudent = StudentService.saveStudent();
+        System.out.println(savedStudent);
+        System.out.println("저장완료");
 
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
         StudentsData.addStudent(student);
@@ -187,7 +188,12 @@ public class CampManagementApplication {
     // 수강생 목록 조회
     private static void inquireStudent() {
         System.out.println("\n수강생 목록을 조회합니다...");
-        // 기능 구현
+        for (Student student : studentStore) {
+            int num = 1;
+            System.out.println(num + " 1) 수강생 이름 : " + student.getStudentName() + "\n  2) 수강생 고유번호 : " + student.getStudentId()
+                    + "\n  3) 수강 과목 : [필수 - " + student.getMandatorySubjects() + "]" + " [선택 - " + student.getChoiceSubjects() + "]");
+            num++;
+        }
         System.out.println("\n수강생 목록 조회 성공!");
     }
 
@@ -218,6 +224,8 @@ public class CampManagementApplication {
         }
     }
 
+
+    /*---------------------------------------------------------------------------------------*/
 
     // 수강생의 과목별 시험 회차 및 점수 등록
     private static void createScore() {
@@ -379,6 +387,7 @@ public class CampManagementApplication {
             System.out.println("학생 번호를 다시 입력받습니다.");
             updateRoundScoreBySubject();
         }
+
     }
     private static void inquireAverageGradeBySubject(){
         StudentService studentService = new StudentService();
@@ -414,6 +423,7 @@ public class CampManagementApplication {
             inquireAverageGradeBySubject();
         }
     }
+
     //getter
     public static String getINDEX_TYPE_STUDENT(){
         return INDEX_TYPE_STUDENT;
@@ -430,4 +440,4 @@ public class CampManagementApplication {
     public static String getSUBJECT_TYPE_CHOICE(){
         return SUBJECT_TYPE_CHOICE;
     }
-}
+

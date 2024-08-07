@@ -35,11 +35,15 @@ public class Student {
     }
 
     //Setter
+
+    //필수과목 저장
     public void setMandatoryArr(ArrayList<Subject> inputMandatoryArr){
         for(Subject sub : inputMandatoryArr){
             this.mandatoryArr.add(sub);
         }
     }
+
+    //선택과목 저장
     public void setChoiceArr(ArrayList<Subject> inputChoiceArr){
         for(Subject sub : inputChoiceArr){
             this.choiceArr.add(sub);
