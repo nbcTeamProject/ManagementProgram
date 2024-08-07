@@ -12,6 +12,7 @@ import camp.service.StudentService;
 import camp.service.SubjectService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -177,9 +178,6 @@ public class CampManagementApplication {
         String studentName = StudentService.saveStudent();
         System.out.println(studentName);
         System.out.println("저장완료");
-
-        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
-        StudentsData.addStudent(student);
         System.out.println();
         // 기능 구현
         System.out.println("수강생 등록 성공!\n");
@@ -191,7 +189,8 @@ public class CampManagementApplication {
         for (Student student : StudentsData.getStudents()) {
             int num = 1;
             System.out.println(num + " 1) 수강생 이름 : " + student.getStudentName() + "\n  2) 수강생 고유번호 : " + student.getStudentId()
-                    + "\n  3) 수강 과목 : [필수 - " + student.getMandatorySubjects() + "]" + " [선택 - " + student.getChoiceSubjects() + "]");
+                    + "\n  3) 수강 과목 : [필수 - " + Arrays.toString(student.getMandatorySubjectsByStr()) + "]"
+                    + " [선택 - " +  Arrays.toString(student.getChoiceSubjectsByStr()) + "]");
             num++;
         }
         System.out.println("\n수강생 목록 조회 성공!");

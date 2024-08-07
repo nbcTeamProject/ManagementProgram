@@ -50,7 +50,6 @@ public class StudentService {
     // 수강생 저장
     public static String saveStudent() {
         SubjectService subjectService = new SubjectService();
-
         Map<String, String> subjects = new HashMap();
         for (Subject subject : SubjectsData.getSubjects()) {
             subjects.put(subject.getSubjectName(), subject.getSubjectType());
@@ -102,10 +101,6 @@ public class StudentService {
                 }
             }
 
-
-            System.out.println(mandatoryArr);
-
-
             if (mandatoryArr.size() >= 5) {
                 System.out.println("더이상 신청할 수 없습니다.");
                 break;
@@ -152,23 +147,20 @@ public class StudentService {
                 choiceArr.remove(choiceArr.size() - 1);
             } else {
                 Subject subject = subjectService.getSubject(choice);
-                if(subject!=null){
+                if (subject != null) {
                     student.addChoiceArr(subject);
-                }else{
+                } else {
                     System.out.println("null");
                 }
-                student.addChoiceArr(subject);
             }
-
             if (choiceArr.size() == 4) {
                 System.out.println("더이상 신청할 수 없습니다.");
                 break;
             }
-            System.out.println(choiceArr);
 
             if (choiceArr.size() == 2) {
                 System.out.println("입력을 끝내겠습니까?(exit 입력시 종료) : ");
-                String end = sc.next();
+                String end = sc.nextLine();
                 if (Objects.equals(end, "exit")) {
                     System.out.println("입력을 종료합니다.");
                     break;
