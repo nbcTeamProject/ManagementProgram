@@ -8,14 +8,14 @@ import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
 import camp.database.ScoresData;
+import camp.CampManagementApplication;
 
 public class ScoreService {
     private Scanner sc = new Scanner(System.in);
-
+    private List<Score> scores = CampManagementApplication.getScoresData().getScores();
 
     // 점수 등록할 때 사용 매개변수로 시험 회차 받아야함
     public Score getScore(Student student, Subject subject, int testNum) {
-        List<Score> scores = ScoresData.getScores();
         for (int i = 0; i < scores.size(); i++) {
             Score tempScore = scores.get(i);
             if (tempScore.getTestNum() == testNum && tempScore.getRegiStudent().equals(student) && tempScore.getRegiSubject().equals(subject)) {
@@ -96,7 +96,7 @@ public class ScoreService {
         int scoreCount = 0;
         int scoreSum = 0;
         int averageScore;
-        for(Score score : ScoresData.getScores()){
+        for(Score score : scores){
             if(score.getRegiStudent().equals(student)&&score.getRegiSubject().equals(subject)){
                 scoreCount++;
                 scoreSum += score.getTestScore();

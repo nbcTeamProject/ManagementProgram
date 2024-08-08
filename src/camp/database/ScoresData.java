@@ -6,18 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScoresData {
-    private static List<Score> scores;
+    private List<Score> scores;
 
-    public static List<Score> getScores(){
+    public  List<Score> getScores(){
         return scores;
     }
-    public static void setInitScores(){
+    public  void setInitScores(){
         scores = new ArrayList<>();
     }
-    public static void addScore(Score score){
+    public  void addScore(Score score){
         scores.add(score);
     }
-    public static int getScoresSize(){
+    public  int getScoresSize(){
         return scores.size();
     }
 
