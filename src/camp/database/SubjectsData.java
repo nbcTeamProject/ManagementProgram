@@ -6,17 +6,18 @@ import java.util.List;
 import camp.CampManagementApplication;
 
 public class SubjectsData {
-    private static List<Subject> subjects;
-    public static List<Subject> getSubjects(){
+    private List<Subject> subjects;
+
+    public  List<Subject> getSubjects(){
         return subjects;
     }
-    public static void setInitSubjects(){
+    public  void setInitSubjects(){
         subjects = new ArrayList<>();
     }
-    public static void setSubjects(List<Subject> subs){
+    public  void setSubjects(List<Subject> subs){
         subjects.addAll(subs);
     }
-    public static int getSubjectsSize(){
+    public  int getSubjectsSize(){
         return subjects.size();
     }
 }

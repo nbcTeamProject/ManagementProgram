@@ -42,7 +42,11 @@ public class CampManagementApplication {
     private static final String INDEX_TYPE_SCORE = "SC";
 
     // 스캐너
-    private static Scanner sc = new Scanner(System.in);
+    private static Scanner      sc = new Scanner(System.in);
+    private static ScoresData   scoresData = new ScoresData();
+    private static StudentsData studentsData = new StudentsData();
+    private static SubjectsData subjectsData = new SubjectsData();
+
 
     public static void main(String[] args) {
         setInitData();
@@ -55,10 +59,10 @@ public class CampManagementApplication {
 
     // 초기 데이터 생성
     private static void setInitData() {
-        ScoresData.setInitScores();
-        StudentsData.setInitStudents();
-        SubjectsData.setInitSubjects();
-        SubjectsData.setSubjects(List.of(
+        scoresData.setInitScores();
+        studentsData.setInitStudents();
+        subjectsData.setInitSubjects();
+        subjectsData.setSubjects(List.of(
                 new Subject(
                         sequence(INDEX_TYPE_SUBJECT),
                         "Java",
@@ -186,7 +190,7 @@ public class CampManagementApplication {
     // 수강생 목록 조회
     private static void inquireStudent() {
         System.out.println("\n수강생 목록을 조회합니다...");
-        for (Student student : StudentsData.getStudents()) {
+        for (Student student : studentsData.getStudents()) {
             int num = 1;
             System.out.println(num + " 1) 수강생 이름 : " + student.getStudentName() + "\n  2) 수강생 고유번호 : " + student.getStudentId()
                     + "\n  3) 수강 과목 : [필수 - " + Arrays.toString(student.getMandatorySubjectsByStr()) + "]"
@@ -258,7 +262,7 @@ public class CampManagementApplication {
                                     if (0 <= tempTestScore && tempTestScore <= 100) { // 점수 범위 안에 있을 때
                                         Score tempscore = new Score(sequence(INDEX_TYPE_SCORE), tempTestNum, tempTestScore);
                                         scoreService.registScore(student, subject, tempscore, tempTestScore);
-                                        ScoresData.addScore(tempscore);
+                                        scoresData.addScore(tempscore);
                                         System.out.println("\n점수 등록 성공!");
                                         flag3 = false;
                                     } else {
@@ -445,6 +449,15 @@ public class CampManagementApplication {
 
     public static String getSUBJECT_TYPE_CHOICE() {
         return SUBJECT_TYPE_CHOICE;
+    }
+    public static ScoresData getScoresData(){
+        return scoresData;
+    }
+    public static StudentsData getStudentsData(){
+        return studentsData;
+    }
+    public static SubjectsData getSubjectsData(){
+        return subjectsData;
     }
 }
 

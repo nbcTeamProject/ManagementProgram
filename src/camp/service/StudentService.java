@@ -3,6 +3,7 @@ package camp.service;
 
 import camp.database.StudentsData;
 import camp.database.SubjectsData;
+import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
 import camp.CampManagementApplication;
@@ -14,15 +15,17 @@ import camp.service.SubjectService;
 
 public class StudentService {
     private static Scanner sc = new Scanner(System.in);
+    private List<Student> students = CampManagementApplication.getStudentsData().getStudents();
+
+
 
 
     // 사용자에게 수강생 번호 입력받아 Student 객체 찾는 메서드
     public Student getStudent() {
-        List<Student> tempStudents = StudentsData.getStudents();
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
         String tempStudentNum = sc.next();
-        for (int i = 0; i < tempStudents.size(); i++) {
-            Student tempStudent = tempStudents.get(i);
+        for (int i = 0; i < students.size(); i++) {
+            Student tempStudent = students.get(i);
             if(tempStudent.getStudentId().equals("ST"+tempStudentNum)){
                 System.out.println(tempStudent.getStudentName() + " 학생의 데이터를 찾았습니다.");
                 return tempStudent;
@@ -33,9 +36,8 @@ public class StudentService {
     }
 
     public Student getStudentById( String studentId ){
-        List<Student> tempStudents = StudentsData.getStudents();
-        for (int i = 0; i < tempStudents.size(); i++) {
-            Student student = tempStudents.get(i);
+        for (int i = 0; i < students.size(); i++) {
+            Student student = students.get(i);
             if (student.getStudentId().equals(studentId)) {
                 System.out.println("해당 Student 객체를 찾았습니다.");
                 return student;
@@ -52,7 +54,8 @@ public class StudentService {
     public static String saveStudent() {
         SubjectService subjectService = new SubjectService();
         Map<String, String> subjects = new HashMap();
-        for (Subject subject : SubjectsData.getSubjects()) {
+        StudentService studentService = new StudentService();
+        for (Subject subject : CampManagementApplication.getSubjectsData().getSubjects()) {
             subjects.put(subject.getSubjectName(), subject.getSubjectType());
         }
         System.out.println(subjects.entrySet());
@@ -158,7 +161,7 @@ public class StudentService {
             }
 
         }
-        StudentsData.addStudent(student);
+        CampManagementApplication.getStudentsData().addStudent(student);
         return studentName;
     }
 }
